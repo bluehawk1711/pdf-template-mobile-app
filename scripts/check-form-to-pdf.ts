@@ -41,13 +41,17 @@ async function main() {
   assert(brochure.pricing.grandTotal === 0, 'brochure pricing is zero');
 
   const html = renderInvoice(brochure);
-  assert(html.includes('KL LAB'), 'cover shows KL LAB');
-  assert(html.includes('Qutocal'), 'page 2 product present');
-  assert(html.includes('MUKOCEF'), 'page 5 product present');
-  assert(html.includes('KLRAB-DSR'), 'page 8 product present');
-  assert(html.includes('Thank You Doctor'), 'closing page present');
-  const pageCount = (html.match(/class="page"/g) || []).length;
+  const pageCount = (html.match(/class="page/g) || []).length;
   assert(pageCount === 9, `brochure has 9 pages (got ${pageCount})`);
+  const imgCount = (html.match(/<img /g) || []).length;
+  assert(imgCount === 9, `every page is a full-bleed image (got ${imgCount})`);
+  const dataUris = (html.match(/data:image\/jpeg;base64,/g) || []).length;
+  assert(dataUris === 9, `all 9 images are embedded as base64 data URIs (got ${dataUris})`);
+  const namedPages = (html.match(/@page pg\d+/g) || []).length;
+  assert(namedPages === 8, `8 landscape/portrait named @page rules (got ${namedPages})`);
+  // No leftover text/design markup from the old SVG template.
+  assert(!html.includes('Qutocal'), 'no product text in the template');
+  assert(!html.includes('Thank You Doctor'), 'no closing-page text');
 
   // ── Dynamic form engine (synthetic fields, for future templates) ──────
   const values = buildInitialValues(SYNTHETIC_FIELDS, null);
@@ -85,7 +89,7 @@ async function main() {
   assert(invoice.pricing.balanceDue === 16800, 'balance after 10000 advance');
 
   const invoiceHtml = renderInvoice(invoice);
-  assert(invoiceHtml.includes('KL LAB'), 'renderer still produces the brochure');
+  assert(invoiceHtml.includes('data:image/jpeg;base64,'), 'renderer still produces the brochure');
 
   // Quotation: no number
   const quote = await buildInvoiceFromValues(values, { mode: 'quotation', templateId: 'kl-lab' });
@@ -97,7 +101,7 @@ async function main() {
     { mode: 'invoice', templateId: 'kl-lab' }
   );
   const minimalHtml = renderInvoice(minimal);
-  assert(minimalHtml.includes('KL LAB'), 'minimal invoice still renders the brochure');
+  assert(minimalHtml.includes('data:image/jpeg;base64,'), 'minimal invoice still renders the brochure');
 
   console.log('All template flow checks passed.');
 }

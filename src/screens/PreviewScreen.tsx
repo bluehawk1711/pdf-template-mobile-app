@@ -176,9 +176,10 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
           </style>
           <script>
             (function () {
-              var scale = Math.min(window.innerWidth / 794, 1);
-              document.querySelector('.preview-wrapper').style.transform =
-                'scale(' + scale + ')';
+              var wrapper = document.querySelector('.preview-wrapper');
+              var maxW = wrapper.scrollWidth || 794;
+              var scale = Math.min(window.innerWidth / maxW, 1);
+              wrapper.style.transform = 'scale(' + scale + ')';
             })();
           </script>
         </head>
