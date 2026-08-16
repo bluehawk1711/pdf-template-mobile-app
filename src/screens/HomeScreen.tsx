@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, StyleSheet, Pressable, ScrollView, Image } from 'react-native';
 import { Text, IconButton } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerActions, useFocusEffect } from '@react-navigation/native';
@@ -8,10 +8,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../types';
 import { useInvoice } from '../context/InvoiceContext';
 import { useTheme } from '../context/ThemeContext';
+import { getTemplate, getTemplates } from '../templates/registry';
+import { getTemplateCover } from '../templates/covers';
 import { invoiceRepository } from '../storage/invoiceRepository';
 import { InvoiceData } from '../invoice/types';
-import { formatINR, formatDate } from '../invoice/format';
-import { spacing, radii, type, brandAccent, AppColors } from '../theme/tokens';
+import { formatDate } from '../invoice/format';
+import { spacing, radii, type, AppColors } from '../theme/tokens';
 
 type HomeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -54,7 +56,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     });
   }, [navigation, isDark, colors]);
 
-  // Refresh recent invoices whenever the screen gains focus (after create/save).
+  // Refresh saved documents whenever the screen gains focus.
   useFocusEffect(
     useCallback(() => {
       let active = true;
@@ -75,18 +77,20 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     }, [])
   );
 
-  const goToTemplate = (mode: 'invoice' | 'quotation') => {
+  const openTemplates = () => {
     startNewInvoice();
-    navigation.navigate('TemplateSelection', { mode });
+    navigation.navigate('TemplateSelection', { mode: 'invoice' });
   };
 
-  const openInvoice = (invoice: InvoiceData) => {
+  const openDocument = (doc: InvoiceData) => {
     navigation.navigate('Preview', {
-      invoiceId: invoice.id,
+      invoiceId: doc.id,
       readOnly: true,
-      mode: invoice.meta.mode,
+      mode: doc.meta.mode,
     });
   };
+
+  const templates = getTemplates();
 
   return (
     <SafeAreaView
@@ -99,47 +103,32 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       >
         {/* Brand header */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>GP STUDIO</Text>
-          <Text
-            style={[
-              styles.owner,
-              { color: isDark ? brandAccent : colors.primary },
-            ]}
-          >
-            BhorBox
+          <Text style={[styles.title, { color: colors.text }]}>TEMPLATES</Text>
+          <Text style={[styles.owner, { color: colors.textSecondary }]}>
+            {templates.length} template{templates.length === 1 ? '' : 's'}
           </Text>
         </View>
 
-        {/* Create actions */}
-        <View style={styles.actions}>
-          <ActionCard
-            icon="receipt"
-            label="Create Bill"
-            description="Itemised invoice with payment balance"
-            variant="primary"
+        {/* Template cards */}
+        {templates.map((template) => (
+          <TemplateCard
+            key={template.id}
+            template={template}
             colors={colors}
-            onPress={() => goToTemplate('invoice')}
+            onPress={openTemplates}
           />
-          <ActionCard
-            icon="file-document-outline"
-            label="Quotation"
-            description="Estimate without an invoice number"
-            variant="outline"
-            colors={colors}
-            onPress={() => goToTemplate('quotation')}
-          />
-        </View>
+        ))}
 
-        {/* Recent invoices */}
+        {/* Recent documents */}
         <View style={styles.recentSection}>
           <View style={styles.recentHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Recent invoices
+              Recent
             </Text>
             <Pressable
               onPress={() => navigation.navigate('History')}
               accessibilityRole="button"
-              accessibilityLabel="View all invoices"
+              accessibilityLabel="View all saved documents"
               hitSlop={8}
             >
               <Text style={[styles.seeAll, { color: colors.primary }]}>
@@ -151,16 +140,16 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           {!loaded ? null : recent.length === 0 ? (
             <View style={[styles.empty, { borderColor: colors.separator }]}>
               <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                No invoices yet — create one and it will show up here.
+                No PDFs yet — open a template and download one.
               </Text>
             </View>
           ) : (
-            recent.map((invoice) => (
+            recent.map((doc) => (
               <Pressable
-                key={invoice.id}
-                onPress={() => openInvoice(invoice)}
+                key={doc.id}
+                onPress={() => openDocument(doc)}
                 accessibilityRole="button"
-                accessibilityLabel={`Open invoice ${invoice.id} for ${invoice.client.name}`}
+                accessibilityLabel={`Open ${doc.templateId} document from ${formatDate(doc.createdAt)}`}
                 style={({ pressed }) => [
                   styles.recentCard,
                   { backgroundColor: colors.card, borderColor: colors.separator },
@@ -172,27 +161,15 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
                     style={[styles.recentName, { color: colors.text }]}
                     numberOfLines={1}
                   >
-                    {invoice.client.name}
+                    {getTemplate(doc.templateId)?.name ?? doc.templateId}
                   </Text>
                   <Text
                     style={[styles.recentMeta, { color: colors.textSecondary }]}
                   >
-                    {invoice.id || 'Quotation'} ·{' '}
-                    {formatDate(invoice.createdAt)}
+                    PDF · {formatDate(doc.createdAt)}
                   </Text>
                 </View>
-                <View style={styles.recentRight}>
-                  <Text style={[styles.recentAmount, { color: colors.text }]}>
-                    {formatINR(invoice.pricing.grandTotal)}
-                  </Text>
-                  {invoice.pricing.balanceDue > 0 && (
-                    <Text
-                      style={[styles.recentBalance, { color: colors.primary }]}
-                    >
-                      Balance {formatINR(invoice.pricing.balanceDue)}
-                    </Text>
-                  )}
-                </View>
+                <IconButton icon="chevron-right" iconColor={colors.textMuted} />
               </Pressable>
             ))
           )}
@@ -202,61 +179,55 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const ActionCard: React.FC<{
-  icon: string;
-  label: string;
-  description: string;
-  variant: 'primary' | 'outline';
+const TemplateCard: React.FC<{
+  template: ReturnType<typeof getTemplates>[number];
   colors: AppColors;
   onPress: () => void;
-}> = ({ icon, label, description, variant, colors, onPress }) => {
-  const primary = variant === 'primary';
+}> = ({ template, colors, onPress }) => {
+  const cover = getTemplateCover(template.id);
+
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityHint={description}
+      accessibilityLabel={`${template.name} template`}
+      accessibilityHint="Opens the template selection"
       style={({ pressed }) => [
-        styles.actionCard,
+        styles.templateCard,
         {
-          backgroundColor: primary ? colors.primary : colors.card,
-          borderColor: primary ? colors.primary : colors.border,
+          backgroundColor: colors.card,
+          borderColor: colors.separator,
         },
-        pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+        pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
       ]}
     >
-      <View
-        style={[
-          styles.actionIcon,
-          {
-            backgroundColor: primary ? 'rgba(255,255,255,0.2)' : colors.primarySoft,
-          },
-        ]}
-      >
-        <IconButton
-          icon={icon}
-          size={22}
-          iconColor={primary ? colors.onPrimary : colors.primary}
-          style={styles.actionIconButton}
+      {cover && (
+        <Image
+          source={cover}
+          resizeMode="cover"
+          style={styles.templateCover}
+          accessibilityIgnoresInvertColors
         />
+      )}
+
+      <View style={styles.templateInfo}>
+        <Text style={[styles.templateName, { color: colors.text }]}>
+          {template.name}
+        </Text>
+        <Text style={[styles.templateDesc, { color: colors.textSecondary }]}>
+          {template.description}
+        </Text>
+        <View style={styles.tags}>
+          {template.tags.map((tag) => (
+            <View
+              key={tag}
+              style={[styles.tag, { backgroundColor: colors.primarySoft }]}
+            >
+              <Text style={[styles.tagText, { color: colors.primary }]}>{tag}</Text>
+            </View>
+          ))}
+        </View>
       </View>
-      <Text
-        style={[
-          styles.actionLabel,
-          { color: primary ? colors.onPrimary : colors.text },
-        ]}
-      >
-        {label}
-      </Text>
-      <Text
-        style={[
-          styles.actionDesc,
-          { color: primary ? 'rgba(255,255,255,0.85)' : colors.textSecondary },
-        ]}
-      >
-        {description}
-      </Text>
     </Pressable>
   );
 };
@@ -281,40 +252,42 @@ const styles = StyleSheet.create({
   owner: {
     marginTop: spacing.xs,
     fontSize: type.callout,
-    fontWeight: '700',
-    letterSpacing: 3,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
-  actions: {
+  templateCard: {
     flexDirection: 'row',
-    marginHorizontal: -spacing.sm,
-    marginBottom: spacing.xxxl,
-  },
-  actionCard: {
-    flex: 1,
-    marginHorizontal: spacing.sm,
-    borderRadius: radii.lg,
     borderWidth: 1,
+    borderRadius: radii.lg,
     padding: spacing.lg,
-    minHeight: 148,
+    marginBottom: spacing.lg,
   },
-  actionIcon: {
-    width: 42,
-    height: 42,
+  templateCover: {
+    width: 96,
+    height: 124,
     borderRadius: radii.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.md,
+    marginRight: spacing.lg,
   },
-  actionIconButton: { margin: 0 },
-  actionLabel: {
-    fontSize: type.headline,
-    fontWeight: '700',
-  },
-  actionDesc: {
-    fontSize: type.footnote,
-    lineHeight: 17,
+  templateInfo: { flex: 1, justifyContent: 'center' },
+  templateName: { fontSize: type.headline, fontWeight: '700' },
+  templateDesc: {
+    fontSize: type.subheadline,
+    lineHeight: 19,
     marginTop: spacing.xs,
   },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: spacing.md,
+  },
+  tag: {
+    borderRadius: radii.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    marginRight: spacing.sm,
+    marginBottom: spacing.xs,
+  },
+  tagText: { fontSize: type.footnote, fontWeight: '600' },
   recentSection: {},
   recentHeader: {
     flexDirection: 'row',
@@ -345,9 +318,6 @@ const styles = StyleSheet.create({
   recentLeft: { flex: 1, marginRight: spacing.md },
   recentName: { fontSize: type.body, fontWeight: '600' },
   recentMeta: { fontSize: type.footnote, marginTop: 2 },
-  recentRight: { alignItems: 'flex-end' },
-  recentAmount: { fontSize: type.body, fontWeight: '700' },
-  recentBalance: { fontSize: type.caption1, marginTop: 2, fontWeight: '600' },
 });
 
 export default HomeScreen;

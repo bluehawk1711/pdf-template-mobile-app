@@ -1,14 +1,15 @@
 import { InvoiceBusiness } from './types';
 
 /**
- * Default studio identity — one replaceable constant (future: business
- * profiles feature).
+ * Default document identity — one replaceable constant (future: business
+ * profiles feature). Kept neutral now that the app generates fixed templates
+ * (e.g. the K.L LAB brochure) rather than photography invoices.
  */
 export const DEFAULT_BUSINESS: InvoiceBusiness = {
-  name: 'GP Studio',
-  tagline: 'Photography & Cinema',
-  address: 'Chandrabhushan Complex, Titwala, 421605',
-  phone: '+91 93217 58868',
-  email: 'ganeshpandit1908@gmail.com',
-  upiId: 'ganeshpandit1908-1@okicici',
+  name: 'K.L LAB',
+  tagline: '(A Division of K.L. Pharma)',
+  address: 'Saraswati Vihar Block-C, Khoda Colony, Ghaziabad U.P.-201001',
+  phone: '',
+  email: '',
+  upiId: '',
 };

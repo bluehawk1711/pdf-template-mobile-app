@@ -106,6 +106,28 @@ export interface BuildInvoiceOptions {
   templateId: string;
 }
 
+/**
+ * Builds a minimal InvoiceData for templates with no input fields
+ * (e.g. the K.L LAB brochure). The renderer only needs the identity fields;
+ * items/pricing stay empty.
+ */
+export const buildDefaultInvoice = (options: {
+  templateId: string;
+}): InvoiceData => {
+  const now = new Date().toISOString();
+  return {
+    id: '',
+    meta: { mode: 'invoice', dateIssued: now },
+    business: { ...DEFAULT_BUSINESS },
+    client: { name: '' },
+    items: [],
+    payment: { amountPaid: 0 },
+    templateId: options.templateId,
+    createdAt: now,
+    pricing: calculatePricing({ items: [], amountPaid: 0 }),
+  };
+};
+
 /** Builds the canonical InvoiceData from the form's flat field values. */
 export const buildInvoiceFromValues = async (
   values: Record<string, any>,

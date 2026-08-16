@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 import { InvoiceTemplate } from '../templates/types';
+import { getTemplateCover } from '../templates/covers';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, radii, type } from '../theme/tokens';
 
@@ -10,52 +11,13 @@ interface Props {
   onPress: () => void;
 }
 
-/** "KL" from "K.L LAB" — short monogram for the document mock. */
-const monogram = (name: string) =>
-  name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-
 /**
- * Miniature "printed invoice" mock built from Views — the card's signature.
- * Placeholder until real preview renderers exist (plan.md Phase 6).
+ * Template card with the template's real cover image (registry-driven).
+ * Fallback to the reference page-1 artwork lives in src/templates/covers.ts.
  */
-const DocumentMock = ({
-  accent,
-  monogram,
-}: {
-  accent: string;
-  monogram: string;
-}) => (
-  <View style={styles.mock}>
-    <View style={[styles.mockHeader, { backgroundColor: accent }]}>
-      <Text style={styles.mockMonogram}>{monogram}</Text>
-      <View style={styles.mockHeaderLines}>
-        <View style={[styles.mockBar, styles.mockBarThin, { backgroundColor: 'rgba(255,255,255,0.55)' }]} />
-        <View style={[styles.mockBar, { width: '55%', backgroundColor: 'rgba(255,255,255,0.35)' }]} />
-      </View>
-    </View>
-    <View style={styles.mockBody}>
-      <View style={[styles.mockBar, { width: '80%' }]} />
-      <View style={[styles.mockBar, { width: '60%' }]} />
-      <View style={[styles.mockRow, { marginTop: spacing.md }]}>
-        <View style={[styles.mockBar, { width: '45%' }]} />
-        <View style={[styles.mockBar, { width: '20%' }]} />
-      </View>
-      <View style={[styles.mockRow, { marginTop: spacing.xs }]}>
-        <View style={[styles.mockBar, { width: '38%' }]} />
-        <View style={[styles.mockBar, { width: '26%' }]} />
-      </View>
-      <View style={[styles.mockTotals, { backgroundColor: accent }]} />
-    </View>
-  </View>
-);
-
 const TemplateCard: React.FC<Props> = ({ template, selected, onPress }) => {
   const { colors } = useTheme();
+  const cover = getTemplateCover(template.id);
 
   return (
     <Pressable
@@ -73,10 +35,18 @@ const TemplateCard: React.FC<Props> = ({ template, selected, onPress }) => {
       ]}
     >
       <View style={styles.previewWrap}>
-        <DocumentMock
-          accent={template.accent}
-          monogram={monogram(template.name)}
-        />
+        {cover ? (
+          <Image
+            source={cover}
+            resizeMode="cover"
+            style={styles.cover}
+            accessibilityIgnoresInvertColors
+          />
+        ) : (
+          <View style={[styles.cover, styles.coverPlaceholder, { backgroundColor: template.accent }]}>
+            <Text style={styles.placeholderText}>{template.name}</Text>
+          </View>
+        )}
         {selected && (
           <View
             style={[
@@ -118,44 +88,21 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   previewWrap: { position: 'relative' },
-  mock: {
+  cover: {
+    width: '100%',
+    height: 168,
     borderRadius: radii.md,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#D1D1D6',
     backgroundColor: '#FFFFFF',
-    overflow: 'hidden',
-    height: 132,
   },
-  mockHeader: {
-    flexDirection: 'row',
+  coverPlaceholder: {
     alignItems: 'center',
-    height: 44,
-    paddingHorizontal: spacing.md,
+    justifyContent: 'center',
   },
-  mockMonogram: {
+  placeholderText: {
     color: '#FFFFFF',
     fontSize: type.headline,
     fontWeight: '700',
     letterSpacing: 1,
-    marginRight: spacing.md,
-  },
-  mockHeaderLines: { flex: 1 },
-  mockBar: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#E1E1E5',
-    marginTop: 6,
-  },
-  mockBarThin: { height: 4, marginTop: 0 },
-  mockBody: { padding: spacing.md },
-  mockRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  mockTotals: {
-    alignSelf: 'flex-end',
-    width: '32%',
-    height: 10,
-    borderRadius: 3,
-    marginTop: spacing.md,
-    opacity: 0.9,
   },
   check: {
     position: 'absolute',

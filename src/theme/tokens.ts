@@ -1,8 +1,8 @@
 /**
  * Design tokens — single source of truth for the app's visual language.
  *
- * Palette follows Apple's iOS system neutrals with one brand accent
- * (GP Studio purple). Dark mode is intentionally designed, not inverted.
+ * Palette follows Apple's iOS system neutrals with one brand accent.
+ * Dark mode is intentionally designed, not inverted.
  */
 
 export interface AppColors {
@@ -51,7 +51,7 @@ export const palette: { light: AppColors; dark: AppColors } = {
   },
 };
 
-/** Brand accent — BhorBox yellow, used on brand surfaces (splash, home). */
+/** Brand accent — used on brand surfaces (splash, home). */
 export const brandAccent = '#EDE345';
 
 /** 4pt-based spacing scale */

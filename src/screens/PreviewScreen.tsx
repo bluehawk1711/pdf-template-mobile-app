@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, ActivityIndicator, Text } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { savePdfToDownloads, safeFileName } from '../pdf/savePdf';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { getTemplate } from '../templates/registry';
@@ -39,18 +39,18 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
           route.params.invoiceId
         );
         if (!stored) {
-          Alert.alert('Not found', 'This invoice is no longer available.');
+          Alert.alert('Not found', 'This document is no longer available.');
           return;
         }
         invoice = stored;
       }
-      // 📝 Built by the dynamic form
+      // 📝 Built by the template selection (or dynamic form)
       else if (pendingInvoice) {
         invoice = pendingInvoice;
       }
-      // 🚫 No invoice to show
+      // 🚫 Nothing to show
       else {
-        Alert.alert('Nothing to preview', 'Start a new invoice first.');
+        Alert.alert('Nothing to preview', 'Start with a template first.');
         return;
       }
 
@@ -71,10 +71,14 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
 
     setLoading(true);
     try {
-      const { uri } = await Print.printToFileAsync({ html: htmlContent });
-      await Sharing.shareAsync(uri);
+      const templateName =
+        getTemplate(finalInvoice?.templateId ?? 'kl-lab')?.name ?? 'document';
+      await savePdfToDownloads(
+        htmlContent,
+        `${safeFileName(templateName)}-brochure.pdf`
+      );
 
-      // Save ONLY invoice (not quotation, not readOnly)
+      // Save to history (quotations and read-only views are not saved)
       if (!isReadOnly && finalInvoice && mode === 'invoice') {
         await invoiceRepository.save({
           ...finalInvoice,
@@ -84,7 +88,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
 
       Alert.alert(
         'Success',
-        'File ready!',
+        'PDF saved to your Downloads folder!',
         [
           {
             text: 'OK',
@@ -95,19 +99,31 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
         ],
         { cancelable: false }
       );
-    } catch {
-      Alert.alert('Error', 'Failed');
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message.includes('Permission')
+          ? 'Storage permission was not granted — please allow access and try again.'
+          : 'Failed to save the PDF.';
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }
   };
 
+  const template = finalInvoice
+    ? getTemplate(finalInvoice.templateId)
+    : undefined;
+  // Only show the invoice summary bar when there is actual invoice data
+  const hasInvoiceData = !!finalInvoice && finalInvoice.items.length > 0;
+  // Only offer "Edit" when the template collects input
+  const editable = !isReadOnly && (template?.fields.length ?? 0) > 0;
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: colors.background }}
     >
-      {/* Invoice summary bar */}
-      {finalInvoice && (
+      {/* Document summary bar (hidden for static brochures) */}
+      {hasInvoiceData && finalInvoice && (
         <View
           style={[
             styles.infoBar,
@@ -182,7 +198,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
       </View>
 
       <View style={[styles.footer, { borderTopColor: colors.separator }]}>
-        {!isReadOnly && mode === 'invoice' ? (
+        {editable && mode === 'invoice' ? (
           <>
             <Button
               mode="outlined"
@@ -200,7 +216,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
               loading={loading}
               style={styles.button}
             >
-              Download & Share
+              Download PDF
             </Button>
           </>
         ) : (
@@ -212,7 +228,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
             loading={loading}
             style={[styles.button, styles.buttonFull]}
           >
-            Download & Share
+            Download PDF
           </Button>
         )}
       </View>

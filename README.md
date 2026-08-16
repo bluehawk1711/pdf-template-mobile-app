@@ -1,62 +1,71 @@
-# Auto Invoice Maker
+# Templates — PDF Document Generator
 
-A mobile application built with **React Native (Expo + TypeScript)** that helps photography studios quickly generate professional invoices with dynamic QR payments and PDF export.
-
-This app was built to simplify invoice creation for **photographers and production houses** like GP Studio.
+A mobile application built with **React Native (Expo + TypeScript)** that generates
+professional PDF documents from a library of templates. Pick a template and the app
+produces a print-ready PDF you can preview, download, and share.
 
 ---
 
 # Features
 
-• Create invoices for photography events  
-• Select event types (Wedding, Birthday, Baby Shower, etc.)  
-• Add multiple services with pricing  
-• Enter client details and event date  
-• Automatically calculate totals  
-• Generate professional invoice layout  
-• Invoice **preview before generation**  
-• Export invoice as **PDF**  
-• Share invoice directly with clients  
-• Invoice history tracking  
-• Dark mode support  
-• Modern animated splash screen  
+• Template library — each template defines its own document  \
+• Tap a template → preview → **Download PDF**  \
+• Templates that need details collect them via a dynamic form; templates that don't go straight to download  \
+• Document history (saved locally)  \
+• Dark mode support  \
+• Modern animated splash screen
 
 ---
 
 # Tech Stack
 
-React Native (Expo)  
-TypeScript  
-React Navigation  
-React Native Paper  
-WebView  
-Expo Print (PDF generation)  
-AsyncStorage (local invoice storage)
+React Native (Expo)  \
+TypeScript  \
+React Navigation  \
+React Native Paper  \
+WebView  \
+Expo Print (PDF generation)  \
+AsyncStorage (local document storage)
 
 ---
----
-src
-├── context
-│ ├── InvoiceContext.tsx
-│ └── ThemeContext.tsx
-│
-├── screens
-│ ├── HomeScreen.tsx
-│ ├── EventSelectionScreen.tsx
-│ ├── ServicesScreen.tsx
-│ ├── ClientDetailsScreen.tsx
-│ ├── PreviewScreen.tsx
-│ ├── HistoryScreen.tsx
-│ └── SplashScreen.tsx
-│
-├── utils
-│ ├── invoiceBuilder.ts
-│ └── uuid.ts
-│
-└── types.ts
 
 # Project Structure
----
+
+```
+src
+├── components
+│   ├── form           — reusable form controls (dynamic form for templates with fields)
+│   └── TemplateCard.tsx
+├── context
+│   ├── InvoiceContext.tsx
+│   └── ThemeContext.tsx
+├── invoice            — canonical document model, calculations, formatting
+├── screens
+│   ├── SplashScreen.tsx
+│   ├── HomeScreen.tsx
+│   ├── TemplateSelectionScreen.tsx
+│   ├── InvoiceFormScreen.tsx    — dynamic form (only for templates that need input)
+│   ├── PreviewScreen.tsx
+│   └── HistoryScreen.tsx
+├── storage            — InvoiceRepository (AsyncStorage today; API later)
+├── templates
+│   ├── registry.ts    — register a template here to add it to the app
+│   └── kl-lab/        — Template 1: the K.L LAB brochure renderer
+├── theme              — design tokens
+└── types.ts
+```
+
+# Adding a Template
+
+Templates live in `src/templates/` and are registered in `src/templates/registry.ts`.
+Each template declares:
+
+* `id`, `name`, `description`, `tags`, `accent`
+* `sections` + `fields` — if the template needs user input (drives the dynamic form)
+* `renderPdf(data)` — structured data → HTML for the PDF
+
+A template with **no fields** (like K.L LAB) goes straight from selection to the
+download screen.
 
 ---
 
@@ -71,82 +80,78 @@ cd Invoice-Maker
 
 2. Install Dependencies
 
-Make sure Node.js and npm are installed.
-```Then run:
+```bash
 npm install
 ```
 
-3. Install Expo CLI
+3. Start the Development Server
 
-```If Expo CLI is not installed:
-npm install -g expo-cli
+```bash
+npx expo start
 ```
 
-4. Start the Development Server
-
-```Run:
-npx expo start
 You can open the app using:
 • Android Emulator
 • iOS Simulator
 • Expo Go app
-```
-
-```Storage```
----
-Invoices are stored locally on the device using AsyncStorage.
-
-A future backend (e.g. Firebase) can be added behind the `InvoiceRepository`
-interface in `src/storage/invoiceRepository.ts` without changing the app.
----
 
 ---
-Building APK (Android)
+
+# Storage
+
+Documents are stored locally on the device using AsyncStorage. A future backend
+(e.g. Firebase) can be added behind the `InvoiceRepository` interface in
+`src/storage/invoiceRepository.ts` without changing the app.
+
+---
+
+# Building APK (Android)
 
 This project uses Expo EAS Build.
 
-Install EAS CLI
-```npm install -g eas-cli```
-
-```Login to Expo
+```bash
+npm install -g eas-cli
 eas login
-Build APK
 eas build -p android --profile preview
 ```
 
 After the build finishes, Expo will provide a download link for the APK.
 
 ---
----
+
+# PDF Generation
+
+Templates generate PDFs via:
+
 ```
-Invoice PDF Generation
-Invoices are generated using:
-
-HTML Template → WebView Preview → PDF Export
-
-This allows:
-• Professional layout
-• Custom styling
-• Payment details (UPI)
+Template renderer → HTML → WebView preview → PDF export (expo-print)
 ```
----
----
-Future Improvements
 
-• Cloud invoice storage / backup
-• Client payment tracking
-• Automatic invoice numbering system
-• Online payment confirmation
-• WhatsApp invoice sharing button
+The preview shows the exact HTML that gets printed, so what you see is what you
+share. The **Download PDF** button saves the file to the device's **Downloads
+folder**: on Android it uses the Storage Access Framework (the system folder
+picker is the permission request), on iOS it opens the share sheet.
+
+# Template Covers
+
+Template covers are centralized in `src/templates/covers.ts`. For template N,
+drop `assets/template-<N>-image.png` into the repo and register it there to use
+a custom cover — until then the reference page-1 artwork (`assets/template<N>/page1.png`)
+is used automatically.
+
 ---
+
+# Future Improvements
+
+• More templates  \
+• Cloud document backup  \
+• Custom business profiles  \
+• WhatsApp share button
+
 ---
+
 Author
 Developed by Vikas Bhor
-Production House: BhorBox
----
----
-```
+
 License
 This project is for educational and business use.
-```
----

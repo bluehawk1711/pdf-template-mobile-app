@@ -10,12 +10,15 @@ Last updated: 2026-08-14
 
 ## 1. What this project is
 
-An **Expo React Native + TypeScript invoice generator** for photography studios (currently GP Studio / BhorBox).
-It creates photography invoices (and quotations) with dynamic UPI QR payment, HTML-based PDF export, and history.
+An **Expo React Native + TypeScript template-driven PDF generator**. The user picks a template and the app
+renders a print-ready PDF (preview → download → share → history). Currently exactly one template is
+registered: **K.L LAB**, a fixed 9-page pharmaceutical brochure with **no user inputs** — it goes straight
+from selection to the download screen.
 
-**Current goal:** Evolve this from a single-purpose invoice app into a **premium, template-driven invoice
-platform** ("Canva for invoices") where multiple PDF templates can be registered and each template defines its
-own fields, sections, preview, and PDF renderer. Full spec in `plan.md` §1.
+The template system remains the core architecture: templates register `sections`/`fields` (drive a dynamic
+form when input is needed) and `renderPdf(data)` (structured data → HTML). Adding Template 2+ = registering
+an entry in `src/templates/registry.ts`. Full spec in `plan.md` §1 (kept for reference, with the
+photography/invoice parts superseded by the 2026-08-16 decision).
 
 ---
 
@@ -53,24 +56,25 @@ src/
 │   └── ThemeContext.tsx       — light/dark theme from tokens, persisted to AsyncStorage 'appTheme'
 ├── screens/
 │   ├── SplashScreen.tsx
-│   ├── HomeScreen.tsx         — drawer home; create action cards (Bill/Quotation), recent invoices (top 3, focus-refresh)
-│   ├── TemplateSelectionScreen.tsx — registry-driven cards (TemplateCard), Continue → InvoiceForm
-│   ├── InvoiceFormScreen.tsx  — sectioned form driven by the template's fields; live totals; → Preview
-│   ├── PreviewScreen.tsx      — summary bar + WebView of template renderPdf HTML; Download & Share; saves via repository
-│   └── HistoryScreen.tsx      — AsyncStorage-backed list; mode filter pills + search; themed cards; empty states
+│   ├── HomeScreen.tsx         — drawer home; template cards → TemplateSelection; recent saved documents (top 3, focus-refresh)
+│   ├── TemplateSelectionScreen.tsx — registry-driven cards; a template with NO fields opens straight to Preview (default invoice)
+│   ├── InvoiceFormScreen.tsx  — sectioned form driven by the template's fields (only for templates that need input; guards empty-fields case)
+│   ├── PreviewScreen.tsx      — WebView of template renderPdf HTML; Download PDF (hides invoice summary for static brochures; Edit only when fields exist)
+│   └── HistoryScreen.tsx      — AsyncStorage-backed saved-documents list; search by template/ID; themed cards; empty states
 ├── components/form/           — FormSection, FormTextField, FormDateField, FormSelectField, FormItemsEditor, FormField
 ├── templates/
 │   ├── types.ts               — InvoiceTemplate contract (sections, fields, renderPdf/renderPreview)
-│   ├── registry.ts            — getTemplates / getTemplate / registerTemplate
-│   └── kl-lab/                — config.ts (fields/sections/accent #39A46B), pdf.ts (A4 HTML renderer), design.md
+│   ├── registry.ts            — getTemplates / getTemplate / registerTemplate (central template data)
+│   ├── covers.ts              — central cover registry: assets/template-<n>-image.png else reference page-1 artwork
+│   └── kl-lab/                — config.ts (no fields — static brochure), pdf.ts (9-page A4 HTML renderer), design.md
 ├── invoice/
 │   ├── types.ts               — canonical InvoiceData model (meta/business/client/items/pricing/payment/notes)
 │   ├── calculations.ts        — the calculation engine (breakdownLine, calculatePricing, withPricing)
-│   ├── formBuilder.ts         — pure form logic (buildInitialValues, parseItems, buildInvoiceFromValues)
-│   ├── business.ts            — DEFAULT_BUSINESS (identity incl. upiId)
-│   ├── constants.ts           — EVENT_TYPES, DEFAULT_SERVICES
+│   ├── formBuilder.ts         — pure form logic (buildInitialValues, parseItems, buildInvoiceFromValues, buildDefaultInvoice)
+│   ├── business.ts            — DEFAULT_BUSINESS (K.L LAB identity; neutral now)
 │   ├── format.ts              — formatINR / formatDate
-│   └── numbering.ts           — generateInvoiceNumber / createInvoiceNumber
+│   └── numbering.ts           — generateInvoiceNumber / createInvoiceNumber (only used by the dynamic form)
+├── pdf/savePdf.ts             — savePdfToDownloads (Android SAF → Downloads folder w/ permission ask; iOS share sheet)
 ├── storage/invoiceRepository.ts — InvoiceRepository interface + AsyncStorage impl
 └── utils/uuid.ts              — generateId() (used by the items editor)
 assets/
@@ -83,7 +87,9 @@ pdfs/
 ```
 
 ### Current user flow
-`Splash → Home → Create (Bill | Quotation) → TemplateSelection → InvoiceForm (sectioned, live totals) → Preview (WebView) → Download & Share`
+`Splash → Home (template cards) → TemplateSelection → K.L LAB (no fields) → Preview (WebView) → Download PDF`
+
+For future templates WITH fields the flow is `TemplateSelection → InvoiceForm (sectioned, live totals) → Preview`, unchanged — the form system is intact and tested via synthetic fields (`scripts/check-form-to-pdf.ts`).
 
 ### Domain model (src/invoice/types.ts)
 - `InvoiceData`: `{ id (number; '' for quotations), meta, business, client, items[], pricing, payment, notes?, templateId, createdAt, pdfUrl?, storagePath? }`
@@ -136,6 +142,8 @@ These are binding working agreements — see `plan.md` for the full spec:
 
 | Date | Status | Decision | Rationale / Notes |
 |---|---|---|---|
+| 2026-08-16 | ✅ | **Rebrand + PDF-to-Downloads + template covers.** App display name "Templates" (icon unchanged per user), `package.json` name → templates, workflow artifact → templates-release-apk, GitHub Actions Node 20 → **24** (20 is EOL; 24 is current LTS; `engines: >=22` in package.json). **PDF save**: new `src/pdf/savePdf.ts` — Android uses `expo-file-system/legacy` Storage Access Framework: `requestDirectoryPermissionsAsync()` (the system folder picker IS the permission ask) → `createFileAsync` in Downloads → `writeAsStringAsync` base64; iOS keeps the share sheet. PreviewScreen shows "PDF saved to your Downloads folder!" and a friendly message if permission was denied. **Template covers**: new `src/templates/covers.ts` — central registry; for template N, `assets/template-<N>-image.png` (custom cover) takes priority, else falls back to the reference page-1 artwork (`assets/template<N>/page1.png`). HomeScreen + TemplateCard now show the real cover image instead of the placeholder mock. Home already lists available templates from the registry (centralized data). | User request: keep app icon, rebrand everything else, show templates on Home, centralize template data, save PDFs to the Downloads folder with a permission ask, bump Node off the deprecated 20 line, use page1 as the template cover when no template-<N>-image asset exists. |
+| 2026-08-16 | ✅ | **App repositioned: template-driven PDF generator, photography/invoice branding removed.** The K.L LAB template now declares **no fields/sections** (`fields: []`) — it is a fixed 9-page brochure rendered directly. Flow: Home shows template cards → TemplateSelection → a template with no fields **skips the form** and opens straight to Preview (`buildDefaultInvoice` in `formBuilder.ts` builds a minimal `InvoiceData`; `TemplateSelectionScreen.goWithTemplate` navigates to Preview; Continue stays for field-bearing templates). PreviewScreen hides the invoice summary bar for static brochures, shows **Edit only when the template has fields**, and labels the button **Download PDF**. InvoiceFormScreen guards the empty-fields case (direct Continue). HomeScreen rewritten: template cards instead of Create Bill/Quotation; "Recent" shows saved documents by template name + date. HistoryScreen rewritten: no invoice/quotation filter pills; PDF badge; template name + date; neutral empty states. Splash: "TEMPLATES / Professional PDF documents", BhorBox + photography tagline removed. `DEFAULT_BUSINESS` → K.L LAB identity. Deleted `src/invoice/constants.ts` (photography EVENT_TYPES/DEFAULT_SERVICES; preset chips removed from FormItemsEditor). `app.json` name → "Templates". README rewritten. `scripts/check-form-to-pdf.ts` rewritten: fieldless-brochure flow (9 pages) + synthetic-fields form-engine regression — 23 asserts pass; `tsc --noEmit` clean. | User request: "modify all the screens... add a template card... kl lab template has no input in this case show direct download button which will save pdf; remove photography or invoice making details the app isnt about this". The dynamic form system stays intact for future templates that collect input. |
 | 2026-08-16 | ✅ | **Template 1 reference rebuilt as image-only PDF.** `pdfs/template1.pdf` now contains exactly the 9 page images from `assets/template1/` (page1–page9.png), one image per page, zero text/added design (no logo strip, no headers/footers). Built with `img2pdf` in the local `tmp/pdfenv` venv; page size = each image's physical size (pHYs-aware), so every page is fully covered by its image. Verified with `scripts`-style check via pypdf: 9 pages, 1 image each, `extract_text()` empty per page → PASS. This PDF replaces `pdfs/K.L LAB.pdf` (deleted from the repo, still untracked in git) as the visual reference for Template 1. Note: this model cannot view images inline, so verification was programmatic (pypdf image/text counts) rather than visual. | User request: use the 9 `assets/template1/` images for the first PDF template, 1 image per page, no text/design. The prior `template1.pdf` embedded a repeated 700×88 logo strip on every page (2 images/page) — now removed. |
 | 2026-08-14 | ✅ | **Full-app UI review & enhancement pass.** HomeScreen redesigned: brand header, two create action cards (Bill / Quotation) with icon + description, and a **Recent invoices** section (top 3, refresh-on-focus via `useFocusEffect`, tap → read-only preview, empty-state hint, "See all" → History). HistoryScreen rewritten: themed drawer header (menu + theme toggle, matching Home), large title, **All / Invoice / Quotation filter pills**, search, and rich cards (mode badge, invoice number, client, date, engine-formatted totals via `formatINR`/`formatDate`, Paid ✓ / Balance status, 44px+ targets); proper empty states (first-run CTA vs no-match state). PreviewScreen: invoice summary bar (client, number · date, total) + themed WebView wrapper and footer; single-button footer now centers instead of floating left. Splash: shared `brandAccent` token (#EDE345) replaces the duplicated `#EDE345`/`#fbbf24` yellows; timing cut 4.5 s → 3.2 s. Fixed hardcoded light-only separators that broke dark mode (`#E5E5EA` in InvoiceForm totals card + FormItemsEditor rows → `colors.separator`). Added `brandAccent` to `theme/tokens.ts`. Removed drawer `paddingTop: 130` hack in App.tsx. | Spec §8/§9/§23/§24. Resolves dark-mode separator bugs and hardcoded color drift; makes Home/History feel like the rest of the app. `tsc --noEmit` clean. |
 | 2026-08-14 | ✅ | **Form polish pass (Phase 9 partial).** Items editor: dashed empty state when all rows are removed, `LayoutAnimation` ease on add/remove (Android experimental flag set at module scope), `minHeight: 44` touch targets on all item inputs, per-input `accessibilityLabel`s, themed error color. Select + date fields: `accessibilityHint`s, option rows get `accessibilityRole="button"` + selected state. Text field errors announce via `accessibilityLiveRegion="polite"`. Form scroll: `keyboardDismissMode` (interactive on iOS, on-drag on Android). | Spec §8 (subtle animations) + §24 (accessibility). No new dependencies. |

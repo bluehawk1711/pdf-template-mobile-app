@@ -11,6 +11,7 @@ import { formatINR } from '../invoice/format';
 import {
   buildInitialValues,
   buildInvoiceFromValues,
+  buildDefaultInvoice,
   parseItems,
   ItemDraft,
 } from '../invoice/formBuilder';
@@ -36,6 +37,37 @@ const InvoiceFormScreen: React.FC<Props> = ({ navigation, route }) => {
     buildInitialValues(fields, pendingInvoice)
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Templates without fields have nothing to fill in — route straight to
+  // the preview/download screen (reached only via stale navigation).
+  if (fields.length === 0) {
+    return (
+      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.text }]}>No details needed</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            {template?.name} generates its PDF directly. Continue to preview and download.
+          </Text>
+        </View>
+        <View style={styles.flex} />
+        <View style={[styles.footer, { borderTopColor: colors.separator }]}>
+          <Button
+            mode="contained"
+            buttonColor={colors.primary}
+            textColor={colors.onPrimary}
+            onPress={async () => {
+              setPendingInvoice(buildDefaultInvoice({ templateId }));
+              navigation.navigate('Preview', { mode });
+            }}
+            style={styles.continue}
+            labelStyle={{ fontSize: type.body, fontWeight: '600' }}
+          >
+            Continue
+          </Button>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const setValue = (key: string, value: any) => {
     setValues((prev) => ({ ...prev, [key]: value }));

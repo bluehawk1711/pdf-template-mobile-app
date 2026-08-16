@@ -11,7 +11,6 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import Svg, { Line } from 'react-native-svg';
-import { brandAccent } from '../theme/tokens';
 
 type SplashScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -28,7 +27,6 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
   const lineWidth = useSharedValue(0);
   const textOpacity = useSharedValue(0);
   const taglineOpacity = useSharedValue(0);
-  const brandOpacity = useSharedValue(0);
   const sweepPosition = useSharedValue(-width);
 
   useEffect(() => {
@@ -47,12 +45,6 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
     // Tagline
     taglineOpacity.value = withDelay(
       700,
-      withTiming(1, { duration: 500 })
-    );
-
-    // BhorBox
-    brandOpacity.value = withDelay(
-      1000,
       withTiming(1, { duration: 500 })
     );
 
@@ -84,10 +76,6 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
     opacity: taglineOpacity.value,
   }));
 
-  const brandStyle = useAnimatedStyle(() => ({
-    opacity: brandOpacity.value,
-  }));
-
   const sweepStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: sweepPosition.value }],
   }));
@@ -110,19 +98,14 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Logo */}
       <Animated.View style={textStyle}>
-        <Text style={styles.logo}>GP STUDIO</Text>
+        <Text style={styles.logo}>TEMPLATES</Text>
       </Animated.View>
 
       {/* Tagline */}
       <Animated.View style={taglineStyle}>
         <Text style={styles.tagline}>
-          Photography • Cinema • Stories
+          Professional PDF documents
         </Text>
-      </Animated.View>
-
-      {/* BhorBox */}
-      <Animated.View style={[brandStyle, { marginTop: 40 }]}>
-        <Text style={styles.brand}>BhorBox</Text>
       </Animated.View>
 
       {/* Light Sweep Line */}
@@ -153,12 +136,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#9ca3af',
     letterSpacing: 2,
-  },
-  brand: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: brandAccent,
-    letterSpacing: 4,
   },
   sweepLine: {
     position: 'absolute',

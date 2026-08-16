@@ -5,7 +5,6 @@ import { useTheme } from '../../context/ThemeContext';
 import { spacing, radii, type } from '../../theme/tokens';
 import { breakdownLine } from '../../invoice/calculations';
 import { formatINR } from '../../invoice/format';
-import { DEFAULT_SERVICES } from '../../invoice/constants';
 import { ItemDraft, blankItem } from '../../invoice/formBuilder';
 
 interface Props {
@@ -69,34 +68,6 @@ const FormItemsEditor: React.FC<Props> = ({ items, onChange, error }) => {
 
   return (
     <View>
-      {/* Preset service chips */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        style={styles.chips}
-      >
-        {DEFAULT_SERVICES.map((s) => (
-          <Button
-            key={s}
-            mode="outlined"
-            compact
-            onPress={() => {
-              if (items.length === 1 && !items[0].name) {
-                update(items[0].id, { name: s });
-              } else {
-                addItem(s);
-              }
-            }}
-            style={styles.chip}
-            textColor={colors.textSecondary}
-            theme={{ colors: { primary: colors.border } }}
-          >
-            {s}
-          </Button>
-        ))}
-      </ScrollView>
-
       {items.length === 0 && (
         <View style={[styles.empty, { borderColor: colors.separator }]}>
           <Text style={[styles.emptyText, { color: colors.textMuted }]}>
@@ -180,8 +151,6 @@ const FormItemsEditor: React.FC<Props> = ({ items, onChange, error }) => {
 };
 
 const styles = StyleSheet.create({
-  chips: { flexGrow: 0, marginBottom: spacing.md },
-  chip: { marginRight: spacing.sm, borderRadius: radii.pill },
   empty: {
     borderWidth: 1,
     borderStyle: 'dashed',

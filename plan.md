@@ -5,6 +5,15 @@
 > is never lost. Sections 2+ track design decisions and implementation status.
 >
 > Companions: `memory.md` (project state + decision log) · `agents.md` (how to work here).
+>
+> **Repositioning note (2026-08-16):** the app is now a **template-driven PDF generator**, not a photography
+> invoice maker. Section 1 remains preserved verbatim as the original requirements; the 2026-08-16 decisions
+> (in `memory.md` §6) supersede the photography/invoice specifics — K.L LAB has no input fields and goes
+> straight from template selection to the Download PDF screen, which saves the PDF to the device's
+> Downloads folder (Android SAF / iOS share sheet). The template/form architecture below stands.
+>
+> **Template covers (2026-08-16):** covers are centralized in `src/templates/covers.ts`. Convention: for
+> template N, `assets/template-<N>-image.png` wins; otherwise the reference page-1 artwork is the cover.
 
 ---
 
@@ -399,9 +408,9 @@ Legend: ⬜ not started · 🟡 in progress · ✅ done
 - [ ] ⬜ Device pass: run on Android emulator/device, verify keyboard/safe-area/layout on small & large screens
 
 ### Phase 10 — Final review
-- [ ] ⬜ `npx tsc --noEmit` clean (after `npm install`)
-- [ ] ⬜ Manual smoke test: create invoice → template → form → preview → PDF → share → history
-- [ ] ⬜ Update `README.md`, `memory.md` decision log, and this plan
+- [x] ✅ `npx tsc --noEmit` clean (2026-08-16); form→PDF check (23 asserts) passes
+- [ ] ⬜ Device pass: verify PDF lands in the Downloads folder (Android SAF picker) — needs a real device/emulator
+- [ ] ⬜ Manual smoke test: template → preview → PDF → Downloads → history
 
 ---
 
