@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>GP Studio Photography Invoice</title>
+   <style>
+       /* --- MODERN STYLING VARIABLES --- */
+       :root {
+           --primary-color: #22313f;   /* A deeper, darker slate representing professional gear */
+           --accent-color: #f0932b;    /* A warmer "golden hour" orange accent */
+           --text-color: #444444;
+           --light-gray: #f8f9fa;
+           --border-color: #e0e0e0;
+       }
+
+       * {
+        box-sizing: border-box;
+        }
+
+       /* --- GLOBAL STYLES --- */
+       body {
+           font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+           font-size: 12px;
+           line-height: 1.6;
+           color: var(--text-color);
+           margin: 0;
+           padding: 16px;
+           width: 100%;
+           box-sizing: border-box;
+           background-color: #eceff1; /* Slightly darker background */
+           -webkit-print-color-adjust: exact;
+           print-color-adjust: exact;
+       }
+
+       .invoice {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+       }
+
+       .invoice-container {
+           max-width: 800px;
+           margin: auto;
+           background: #fff;
+           padding: 50px;
+           box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+           border-radius: 12px;
+           position: relative;
+           overflow: hidden;
+           border-top: 5px solid var(--accent-color);
+       }
+
+       /* --- PHOTOGRAPHY THEME ILLUSTRATION (Watermark) --- */
+       .invoice-container::before {
+           content: '';
+           position: absolute;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%) rotate(15deg);
+           width: 80%;
+           height: 80%;
+           background: 
+               radial-gradient(circle, transparent 20%, rgba(240, 147, 43, 0.03) 21%, transparent 22%),
+               radial-gradient(circle, transparent 30%, rgba(34, 49, 63, 0.03) 31%, transparent 32%),
+               conic-gradient(from 0deg, transparent 0deg 10deg, rgba(34, 49, 63, 0.04) 10deg 20deg, transparent 20deg 30deg, rgba(34, 49, 63, 0.04) 30deg 40deg, transparent 40deg 50deg, rgba(34, 49, 63, 0.04) 50deg 60deg, transparent 60deg 360deg);
+           z-index: 0;
+           pointer-events: none;
+           border-radius: 50%;
+           opacity: 0.5;
+       }
+
+       /* Ensure content sits above the watermark */
+       header, section, .bottom-section, footer {
+           position: relative;
+           z-index: 1;
+       }
+
+
+       /* --- HEADER SECTION --- */
+       header {
+           display: flex;
+           justify-content: space-between;
+           align-items: flex-start;
+           margin-bottom: 50px;
+       }
+
+       .company-branding h1 {
+           margin: 0;
+           color: var(--primary-color);
+           font-size: 2.8em;
+           font-weight: 800;
+           letter-spacing: -1px;
+           line-height: 0.9;
+       }
+
+       .company-branding span {
+           color: var(--accent-color);
+           display: block;
+           font-size: 0.4em;
+           letter-spacing: 3px;
+           text-transform: uppercase;
+           margin-top: 5px;
+           font-weight: 500;
+       }
+
+       .invoice-title {
+           text-align: right;
+       }
+
+       .invoice-title h2 {
+           margin: 0;
+           color: var(--border-color);
+           font-size: 3em;
+           font-weight: 900;
+           text-transform: uppercase;
+           letter-spacing: 2px;
+           opacity: 0.5;
+       }
+
+       /* --- INFO GRID --- */
+       .info-grid {
+           display: grid;
+           grid-template-columns: repeat(3, 1fr);
+           gap: 40px;
+           margin-bottom: 50px;
+           border-bottom: 1px solid var(--border-color);
+           padding-bottom: 30px;
+       }
+
+       .info-box h3 {
+           font-size: 0.85em;
+           color: var(--accent-color);
+           text-transform: uppercase;
+           margin-bottom: 15px;
+           font-weight: 700;
+           letter-spacing: 1px;
+       }
+
+       .info-box p {
+           margin: 5px 0;
+           font-size: 0.95em;
+           font-weight: 500;
+       }
+       
+       .details-box p {
+           margin-bottom: 10px;
+       }
+       .details-box strong {
+           color: var(--primary-color);
+       }
+
+
+       /* --- THE TABLE --- */
+       .table-container {
+           margin-bottom: 30px;
+       }
+
+       table {
+           width: 100%;
+           border-collapse: separate;
+           border-spacing: 0 10px; /* Adds spacing between rows */
+       }
+
+       th {
+           text-align: left;
+           padding: 10px 15px;
+           font-weight: 700;
+           text-transform: uppercase;
+           font-size: 0.8em;
+           color: var(--primary-color);
+           letter-spacing: 1px;
+           border-bottom: 2px solid var(--border-color);
+       }
+
+       td {
+           padding: 20px 15px;
+           background: var(--light-gray);
+           border-top: 1px solid var(--border-color);
+           border-bottom: 1px solid var(--border-color);
+       }
+       
+       /* Rounded corners for table rows */
+       tr td:first-child { border-left: 1px solid var(--border-color); border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+       tr td:last-child { border-right: 1px solid var(--border-color); border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+       /* UPDATED COLUMN WIDTHS FOR 2-COLUMN LAYOUT */
+       .col-desc { width: 75%; }
+       .col-total { width: 25%; text-align: right; font-weight: bold; color: var(--primary-color); font-size: 1.1em;}
+
+       .item-title {
+           font-weight: 700;
+           color: var(--primary-color);
+           display: block;
+           font-size: 1.1em;
+       }
+       .item-subtitle {
+           font-size: 0.9em;
+           color: #777;
+           display: block;
+           margin-top: 5px;
+           font-style: italic;
+       }
+
+       /* --- BOTTOM SECTION (QR & TOTALS) --- */
+       .bottom-section {
+           display: flex;
+           justify-content: space-between;
+           align-items: center; 
+           margin-top: 30px;
+           padding-top: 20px;
+       }
+
+       /* QR Section */
+       .payment-info {
+           width: 50%;
+           padding-right: 20px; /* Added space between QR area and totals */
+       }
+
+       .qr-container {
+           display: flex;
+           /* UPDATED: Pushes the QR code to the right side of its container */
+           justify-content: flex-end; 
+       }
+
+       .qr-code-placeholder {
+           width: 150px; 
+           height: 150px;
+           background-color: #fff;
+           border: 3px solid var(--accent-color); 
+           border-radius: 4px;
+           padding: 5px;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           overflow: hidden;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+           position: relative;
+       }
+       
+       /* Camera viewfinder effect corners */
+       .qr-code-placeholder::after {
+           content: '';
+           position: absolute;
+           top: -5px; left: -5px; right: -5px; bottom: -5px;
+           border: 2px solid var(--primary-color);
+           clip-path: polygon(0 20%, 0 0, 20% 0, 80% 0, 100% 0, 100% 20%, 100% 80%, 100% 100%, 80% 100%, 20% 100%, 0 100%, 0 80%);
+           opacity: 0.3;
+       }
+
+       .qr-code-placeholder img {
+           width: 100%;
+           height: auto;
+           display: block;
+       }
+
+
+       /* Totals Section */
+       .totals-box {
+           width: 40%;
+           text-align: right;
+       }
+
+.totals-row {
+    page-break-inside: avoid;        
+    display: flex;
+    justify-content: space-between;
+    align-items: center;        
+    padding: 12px 0;
+}
+       
+       .totals-row span:first-child {
+           color: #888;
+           font-weight: 500;
+           font-size: 1.1em;
+       }
+
+       .grand-total {
+           font-size: 1.8em;
+           font-weight: 800;
+           color: var(--primary-color);
+           border-top: 3px solid var(--accent-color);
+           padding-top: 20px;
+           margin-top: 10px;
+       }
+       
+       .grand-total span:first-child {
+            color: var(--primary-color);
+       }
+       .upi-text {
+          margin-top: 6px;
+          font-size: 12px;
+          font-weight: bold;
+       }
+       /* --- FOOTER --- */
+       footer {
+           margin-top: 60px;
+           text-align: center;
+           font-size: 0.8em;
+           color: #999;
+           border-top: 1px solid #eee;
+           padding-top: 20px;
+       }
+
+       /* --- PRINT CSS --- */
+       @media print {
+           body { margin: 0; padding: 0; background-color: #fff;}
+           .invoice-container { box-shadow: none; padding: 30px; border-radius: 0; border-top: none; max-width: 100%; }
+           /* Ensure background graphics print */
+           .invoice-container::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+           td { background-color: #f8f9fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+       }
+   </style>
+</head>
+<body>
+
+   <div class="invoice-container">
+       <header>
+           <div class="company-branding">
+               <h1>GP STUDIO<span>Photography & Cinema</span></h1>
+           </div>
+           <div class="invoice-title">
+               <h2>Invoice</h2>
+           </div>
+       </header>
+
+       <section class="info-grid">
+           <div class="info-box">
+               <h3>From</h3>
+               <p><strong>GP Studio</strong></p>
+               <p>Chandrabhushan Complex</p>
+               <p>Titwala, 421605</p>
+               <p>ganeshpandit1908@gmail.com</p>
+           </div>
+           <div class="info-box">
+               <h3>Bill To</h3>
+               <p style="font-size: 1.2em; font-weight: bold;">Name: ${invoice.client?.name || ''}</p>
+               <p style="font-size: 0.8em;">Phone: ${invoice.client?.phone || ''}</p>
+           </div>
+           <div class="info-box details-box" style="text-align: right;">
+               <h3>Invoice Details</h3>
+               {{INVOICE_DETAILS}}
+           </div>
+       </section>                                                                                                           
+
+       <section class="table-container">
+           <table>
+               <thead>
+                   <tr>
+                       <th class="col-desc">Description / Service Details</th>
+                       <th class="col-total">Amount</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   {{EVENT_ROWS}}
+               </tbody>
+           </table>
+       </section>
+
+       <div class="bottom-section">
+           <div class="payment-info">
+               <div class="qr-container">
+                {{QR_BLOCK}}
+               </div>
+           </div>
+
+           <div class="totals-box">
+               <div class="totals-row">
+                   <span>Subtotal:</span>
+                   <span>₹{{SUBTOTAL}}</span>
+               </div>
+               <div class="totals-row grand-total">
+                   <span>Total Due:</span>
+                   <span>₹{{TOTAL}}</span>
+               </div>
+           </div>
+       </div>
+
+       <footer>
+        <p>Thank you for your business | GP Studio | ganeshpandit1908@gmail.com</p>
+       </footer>
+
+   </div>
+
+</body>
+</html>
