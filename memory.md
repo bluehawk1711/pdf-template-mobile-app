@@ -4,7 +4,7 @@
 > Whenever a decision is made or an architecture step is taken, **append it to the Decision Log** at the bottom.
 > See `plan.md` for the transformation roadmap and `agents.md` for how agents should work here.
 
-Last updated: 2026-08-16
+Last updated: 2026-08-17
 
 ---
 
@@ -56,8 +56,9 @@ src/
 │   └── ThemeContext.tsx       — light/dark theme from tokens, persisted to AsyncStorage 'appTheme'
 ├── screens/
 │   ├── SplashScreen.tsx
-│   ├── HomeScreen.tsx         — drawer home; template cards → TemplateSelection; recent saved documents (top 3, focus-refresh)
-│   ├── TemplateSelectionScreen.tsx — registry-driven cards; a template with NO fields opens straight to Preview (default invoice)
+│   ├── HomeScreen.tsx         — drawer home; template cards → PageViewer (page-based) or TemplateSelection; recent saved documents (top 3, focus-refresh)
+│   ├── PageViewerScreen.tsx   — horizontal slide viewer: swipes through the template's `pages` images (e.g. K.L LAB's 9 pages) with page counter + Download PDF
+│   ├── TemplateSelectionScreen.tsx — registry-driven cards; field-less page-based templates open PageViewer; field-less plain templates open Preview
 │   ├── InvoiceFormScreen.tsx  — sectioned form driven by the template's fields (only for templates that need input; guards empty-fields case)
 │   ├── PreviewScreen.tsx      — WebView of template renderPdf HTML; Download PDF (hides invoice summary for static brochures; Edit only when fields exist)
 │   └── HistoryScreen.tsx      — AsyncStorage-backed saved-documents list; search by template/ID; themed cards; empty states
@@ -75,6 +76,7 @@ src/
 │   ├── format.ts              — formatINR / formatDate
 │   └── numbering.ts           — generateInvoiceNumber / createInvoiceNumber (only used by the dynamic form)
 ├── pdf/savePdf.ts             — savePdfToDownloads (Android SAF → Downloads folder w/ permission ask; iOS share sheet)
+├── pdf/useDownloadPdf.ts      — shared Download-PDF flow hook (print → save → history → success alert), used by Preview + PageViewer
 ├── storage/invoiceRepository.ts — InvoiceRepository interface + AsyncStorage impl
 └── utils/uuid.ts              — generateId() (used by the items editor)
 assets/
@@ -87,9 +89,9 @@ pdfs/
 ```
 
 ### Current user flow
-`Splash → Home (template cards) → TemplateSelection → K.L LAB (no fields) → Preview (WebView) → Download PDF`
+`Splash → Home (template cards) → PageViewer (horizontal slide through the 9 K.L LAB page images) → Download PDF`
 
-For future templates WITH fields the flow is `TemplateSelection → InvoiceForm (sectioned, live totals) → Preview`, unchanged — the form system is intact and tested via synthetic fields (`scripts/check-form-to-pdf.ts`).
+Templates that declare `pages` (registry `pages?: TemplatePage[]`) open straight into PageViewer from the Home card; field-bearing or page-less templates keep the `TemplateSelection → InvoiceForm → Preview` flow (the WebView preview + dynamic form system is intact).
 
 ### Domain model (src/invoice/types.ts)
 - `InvoiceData`: `{ id (number; '' for quotations), meta, business, client, items[], pricing, payment, notes?, templateId, createdAt, pdfUrl?, storagePath? }`
@@ -142,6 +144,7 @@ These are binding working agreements — see `plan.md` for the full spec:
 
 | Date | Status | Decision | Rationale / Notes |
 |---|---|---|---|
+| 2026-08-17 | ✅ | **Page slide viewer (Template 1).** Clicking a template card on Home now opens `PageViewerScreen` — a **horizontal** swipe-through viewer (FlatList `horizontal` + `pagingEnabled`) of the template's `pages` images, with a back header (template name + "n / N" counter), full-width `contain`-sized pages, and the Download PDF footer. Templates declare optional `pages?: TemplatePage[]` (`{ uri, width, height }`) in the registry (`src/templates/types.ts`); K.L LAB maps its 9 base64 page images from `pages.generated.ts`. Home routes page-based templates → PageViewer directly (no TemplateSelection hop); TemplateSelection also routes field-less page templates there. The Download-PDF flow was extracted to a shared hook `src/pdf/useDownloadPdf.ts` (used by PreviewScreen + PageViewerScreen — single implementation of print → save to Downloads → history save → success alert). WebView PreviewScreen remains for field templates and history read-only. `tsc --noEmit` clean. Placeholder by design: pages are plain images for now — custom page-turn animations come later. | User request: "when clicking on a template1 in the home screen it should open a slide interface... use the 9 page images for now then later we'll upgrade it by custom animations... viewing mode should horizontal". The slide viewer replaces the WebView preview as the brochure viewing experience; PDF generation/download stays intact behind the same button. |
 | 2026-08-16 | ✅ | **KL LAB template = the 9 reference page images, no text/design.** `renderInvoice` now emits one full-bleed `<img>` per page (9 pages), zero text/SVG markup. Images are **base64 JPEG data URIs** in generated `src/templates/kl-lab/pages.generated.ts` (built by `scripts/build-kl-lab-pages.py` from `assets/template1/page1..9.png`; JPEG q95 since pages are fully opaque — 1.95 MB source → 2.6 MB module vs ~13 MB for PNG base64). Data URIs are required because expo-print on Android loads HTML with a null base URL (relative asset refs don't resolve) — and they keep iOS working later. Page sizes come from each image's aspect ratio via named `@page pgN { size: Wpx Hpx }` + `.pgN { page: pgN }` rules → mixed orientations match the reference (verified via headless Chrome: pages 1/9 portrait, 2–8 landscape, page pt sizes match reference where assets match). PreviewScreen preview-scale now measures the wrapper's `scrollWidth` instead of assuming 794px (landscape pages are wider). `scripts/check-form-to-pdf.ts` updated (asserts 9 pages, 9 base64 `<img>`, 8 named @page rules, no leftover product text); `scripts/generate-kl-lab-samples.ts` simplified to one static brochure sample. `tsc --noEmit` clean, 24 checks pass, `pdfs/KL-LAB-sample-invoice.pdf` regenerated (1.87 MB, 9 pages, orientations verified). | User request: "modify the kl lab template with the 9 images remove all texts design and everything the assets have image from page1 to page9 use them" + "only supporting android right now... make sure it works on android". The SVG-swoosh/text renderer from the earlier passes is fully superseded. |
 | 2026-08-16 | ✅ | **Rebrand + PDF-to-Downloads + template covers.** App display name "Templates" (icon unchanged per user), `package.json` name → templates, workflow artifact → templates-release-apk, GitHub Actions Node 20 → **24** (20 is EOL; 24 is current LTS; `engines: >=22` in package.json). **PDF save**: new `src/pdf/savePdf.ts` — Android uses `expo-file-system/legacy` Storage Access Framework: `requestDirectoryPermissionsAsync()` (the system folder picker IS the permission ask) → `createFileAsync` in Downloads → `writeAsStringAsync` base64; iOS keeps the share sheet. PreviewScreen shows "PDF saved to your Downloads folder!" and a friendly message if permission was denied. **Template covers**: new `src/templates/covers.ts` — central registry; for template N, `assets/template-<N>-image.png` (custom cover) takes priority, else falls back to the reference page-1 artwork (`assets/template<N>/page1.png`). HomeScreen + TemplateCard now show the real cover image instead of the placeholder mock. Home already lists available templates from the registry (centralized data). | User request: keep app icon, rebrand everything else, show templates on Home, centralize template data, save PDFs to the Downloads folder with a permission ask, bump Node off the deprecated 20 line, use page1 as the template cover when no template-<N>-image asset exists. |
 | 2026-08-16 | ✅ | **App repositioned: template-driven PDF generator, photography/invoice branding removed.** The K.L LAB template now declares **no fields/sections** (`fields: []`) — it is a fixed 9-page brochure rendered directly. Flow: Home shows template cards → TemplateSelection → a template with no fields **skips the form** and opens straight to Preview (`buildDefaultInvoice` in `formBuilder.ts` builds a minimal `InvoiceData`; `TemplateSelectionScreen.goWithTemplate` navigates to Preview; Continue stays for field-bearing templates). PreviewScreen hides the invoice summary bar for static brochures, shows **Edit only when the template has fields**, and labels the button **Download PDF**. InvoiceFormScreen guards the empty-fields case (direct Continue). HomeScreen rewritten: template cards instead of Create Bill/Quotation; "Recent" shows saved documents by template name + date. HistoryScreen rewritten: no invoice/quotation filter pills; PDF badge; template name + date; neutral empty states. Splash: "TEMPLATES / Professional PDF documents", BhorBox + photography tagline removed. `DEFAULT_BUSINESS` → K.L LAB identity. Deleted `src/invoice/constants.ts` (photography EVENT_TYPES/DEFAULT_SERVICES; preset chips removed from FormItemsEditor). `app.json` name → "Templates". README rewritten. `scripts/check-form-to-pdf.ts` rewritten: fieldless-brochure flow (9 pages) + synthetic-fields form-engine regression — 23 asserts pass; `tsc --noEmit` clean. | User request: "modify all the screens... add a template card... kl lab template has no input in this case show direct download button which will save pdf; remove photography or invoice making details the app isnt about this". The dynamic form system stays intact for future templates that collect input. |

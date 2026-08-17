@@ -23,13 +23,17 @@ const TemplateSelectionScreen: React.FC<Props> = ({ navigation, route }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // A template with no fields has nothing to fill in — go straight to the
-  // preview/download screen (e.g. the K.L LAB brochure).
+  // viewer/download screen (e.g. the K.L LAB brochure).
   const goWithTemplate = (templateId: string) => {
     const template = templates.find((t) => t.id === templateId);
     selectTemplate(templateId);
     if (template && template.fields.length === 0) {
       setPendingInvoice(buildDefaultInvoice({ templateId }));
-      navigation.navigate('Preview', { mode });
+      if (template.pages && template.pages.length > 0) {
+        navigation.navigate('PageViewer', { templateId });
+      } else {
+        navigation.navigate('Preview', { mode });
+      }
     } else {
       setSelectedId(templateId);
     }

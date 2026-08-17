@@ -9,6 +9,10 @@ export type RootStackParamList = {
     mode?: InvoiceMode;
   };
 
+  PageViewer: {
+    templateId: string;
+  };
+
   InvoiceForm: {
     mode?: InvoiceMode;
   };

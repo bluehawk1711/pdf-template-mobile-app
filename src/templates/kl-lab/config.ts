@@ -1,5 +1,6 @@
 import { InvoiceTemplate } from '../types';
 import { renderInvoice } from './pdf';
+import { KL_LAB_PAGES } from './pages.generated';
 
 /**
  * K.L LAB — Template 1.
@@ -18,6 +19,11 @@ export const klLabTemplate: InvoiceTemplate = {
   accent: '#e84b38', // brand red, verified from the reference PDF (design.md)
   sections: [],
   fields: [],
+  pages: KL_LAB_PAGES.map((p) => ({
+    uri: p.src,
+    width: p.w,
+    height: p.h,
+  })),
   renderPdf: renderInvoice,
   renderPreview: renderInvoice, // same HTML for preview and print (spec §15)
 };

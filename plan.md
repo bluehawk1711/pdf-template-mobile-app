@@ -383,6 +383,7 @@ Legend: ⬜ not started · 🟡 in progress · ✅ done
 ### Phase 5 — Premium UI (Apple-inspired)
 - [x] ✅ Design tokens: `src/theme/tokens.ts` — iOS neutrals + brand purple, light/dark palettes, spacing / radii / type scales; ThemeContext consumes them (all screens inherit automatically)
 - [x] ✅ New flow: Home → **Template Selection** → **Invoice Form** (sectioned, template-driven) → Preview → Share (spec §6–§9) — legacy EventSelection/Services/ClientDetails screens and draft plumbing removed (2026-08-14)
+- [x] ✅ **Page slide viewer (2026-08-17):** page-based templates (declared `pages` in the registry) open `PageViewerScreen` straight from the Home card — a horizontal swipe viewer of the template's page images (K.L LAB: its 9 brochure pages) with page counter + Download PDF footer. Plain images for now; custom page-turn animations are the planned upgrade. Shared `useDownloadPdf` hook powers both the viewer and the WebView preview.
 - [x] ✅ Reusable field components (`src/components/form/`): FormSection, FormTextField, FormDateField, FormSelectField, FormItemsEditor (qty/rate/tax/discount rows + preset chips + per-row totals), FormField dispatcher — validation with inline errors; pure logic in `src/invoice/formBuilder.ts`
 - [x] ✅ Live totals in a sticky footer (engine-computed subtotal/discount/tax/grand total/balance) — "see it update live" (spec §27)
 - [x] ✅ Premium template-selection screen: `TemplateSelectionScreen` + `TemplateCard` (mini document mock, tags, selection state, registry-driven) built for many templates (spec §7)

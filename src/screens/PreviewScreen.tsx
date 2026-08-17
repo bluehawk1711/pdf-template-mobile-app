@@ -4,12 +4,12 @@ import { Button, ActivityIndicator, Text } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { savePdfToDownloads, safeFileName } from '../pdf/savePdf';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { getTemplate } from '../templates/registry';
 import { useInvoice } from '../context/InvoiceContext';
 import { useTheme } from '../context/ThemeContext';
+import { useDownloadPdf } from '../pdf/useDownloadPdf';
 import { RootStackParamList } from '../types';
 import { InvoiceData } from '../invoice/types';
 import { invoiceRepository } from '../storage/invoiceRepository';
@@ -21,10 +21,10 @@ type Props = StackScreenProps<RootStackParamList, 'Preview'>;
 const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
   const { pendingInvoice } = useInvoice();
   const { colors } = useTheme();
+  const { download, downloading } = useDownloadPdf();
 
   const [htmlContent, setHtmlContent] = useState('');
   const [finalInvoice, setFinalInvoice] = useState<InvoiceData | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const isReadOnly = route.params?.readOnly;
   const mode = route.params?.mode ?? 'invoice';
@@ -66,48 +66,8 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
     prepare();
   }, []);
 
-  const handleDownload = async () => {
-    if (!htmlContent) return;
-
-    setLoading(true);
-    try {
-      const templateName =
-        getTemplate(finalInvoice?.templateId ?? 'kl-lab')?.name ?? 'document';
-      await savePdfToDownloads(
-        htmlContent,
-        `${safeFileName(templateName)}-brochure.pdf`
-      );
-
-      // Save to history (quotations and read-only views are not saved)
-      if (!isReadOnly && finalInvoice && mode === 'invoice') {
-        await invoiceRepository.save({
-          ...finalInvoice,
-          createdAt: new Date().toISOString(),
-        });
-      }
-
-      Alert.alert(
-        'Success',
-        'PDF saved to your Downloads folder!',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              navigation.popToTop(); // ✅ GO BACK TO HOME
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-    } catch (err) {
-      const message =
-        err instanceof Error && err.message.includes('Permission')
-          ? 'Storage permission was not granted — please allow access and try again.'
-          : 'Failed to save the PDF.';
-      Alert.alert('Error', message);
-    } finally {
-      setLoading(false);
-    }
+  const handleDownload = () => {
+    download(htmlContent, finalInvoice, { readOnly: isReadOnly, mode });
   };
 
   const template = finalInvoice
@@ -214,7 +174,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
               buttonColor={colors.primary}
               textColor={colors.onPrimary}
               onPress={handleDownload}
-              loading={loading}
+              loading={downloading}
               style={styles.button}
             >
               Download PDF
@@ -226,7 +186,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
             buttonColor={colors.primary}
             textColor={colors.onPrimary}
             onPress={handleDownload}
-            loading={loading}
+            loading={downloading}
             style={[styles.button, styles.buttonFull]}
           >
             Download PDF

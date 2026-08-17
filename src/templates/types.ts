@@ -39,6 +39,16 @@ export interface TemplateSection {
   subtitle?: string;
 }
 
+/** One viewable page of a template (image URI + aspect ratio). */
+export interface TemplatePage {
+  /** Image URI — data URI or asset ref, rendered by the slide viewer. */
+  uri: string;
+  /** Pixel width (aspect ratio for layout). */
+  width: number;
+  /** Pixel height (aspect ratio for layout). */
+  height: number;
+}
+
 export interface InvoiceTemplate {
   id: string;
   name: string;
@@ -48,6 +58,8 @@ export interface InvoiceTemplate {
   accent: string;
   sections: TemplateSection[];
   fields: TemplateField[];
+  /** Viewable page images for the slide viewer (Home → PageViewer). */
+  pages?: TemplatePage[];
   /** Structured invoice data -> HTML for printing (Phase 6/7). */
   renderPdf?: (data: InvoiceData) => string;
   /** Structured invoice data -> HTML for the live preview (Phase 6/7). */

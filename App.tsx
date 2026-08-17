@@ -16,6 +16,7 @@ import { RootStackParamList } from './src/types';
 import SplashScreen from './src/screens/SplashScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TemplateSelectionScreen from './src/screens/TemplateSelectionScreen';
+import PageViewerScreen from './src/screens/PageViewerScreen';
 import InvoiceFormScreen from './src/screens/InvoiceFormScreen';
 import PreviewScreen from './src/screens/PreviewScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
@@ -108,6 +109,7 @@ function RootNavigator() {
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Home" component={DrawerScreens} />
           <Stack.Screen name="TemplateSelection" component={TemplateSelectionScreen} />
+          <Stack.Screen name="PageViewer" component={PageViewerScreen} />
           <Stack.Screen name="InvoiceForm" component={InvoiceFormScreen} />
           <Stack.Screen name="Preview" component={PreviewScreen} />
         </Stack.Navigator>

@@ -10,6 +10,8 @@ import { useInvoice } from '../context/InvoiceContext';
 import { useTheme } from '../context/ThemeContext';
 import { getTemplate, getTemplates } from '../templates/registry';
 import { getTemplateCover } from '../templates/covers';
+import { InvoiceTemplate } from '../templates/types';
+import { buildDefaultInvoice } from '../invoice/formBuilder';
 import { invoiceRepository } from '../storage/invoiceRepository';
 import { InvoiceData } from '../invoice/types';
 import { formatDate } from '../invoice/format';
@@ -25,7 +27,7 @@ interface Props {
 }
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const { startNewInvoice } = useInvoice();
+  const { startNewInvoice, selectTemplate, setPendingInvoice } = useInvoice();
   const { theme, toggleTheme, colors } = useTheme();
 
   const isDark = theme === 'dark';
@@ -77,9 +79,17 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     }, [])
   );
 
-  const openTemplates = () => {
+  const openTemplate = (template: InvoiceTemplate) => {
     startNewInvoice();
-    navigation.navigate('TemplateSelection', { mode: 'invoice' });
+    selectTemplate(template.id);
+    if (template.pages && template.pages.length > 0) {
+      // Page-based templates (e.g. the K.L LAB brochure) open straight into
+      // the horizontal slide viewer.
+      setPendingInvoice(buildDefaultInvoice({ templateId: template.id }));
+      navigation.navigate('PageViewer', { templateId: template.id });
+    } else {
+      navigation.navigate('TemplateSelection', { mode: 'invoice' });
+    }
   };
 
   const openDocument = (doc: InvoiceData) => {
@@ -115,7 +125,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             key={template.id}
             template={template}
             colors={colors}
-            onPress={openTemplates}
+            onPress={() => openTemplate(template)}
           />
         ))}
 
