@@ -4,9 +4,9 @@ import {
   FlatList,
   StyleSheet,
   Image,
-  Pressable,
   useWindowDimensions,
   ActivityIndicator,
+  GestureResponderEvent,
 } from 'react-native';
 import { Text, IconButton } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
@@ -26,6 +26,7 @@ import { RootStackParamList } from '../types';
 import { TemplatePage } from '../templates/types';
 import { getTemplate } from '../templates/registry';
 import { useInvoice } from '../context/InvoiceContext';
+import { useTheme } from '../context/ThemeContext';
 import { buildDefaultInvoice } from '../invoice/formBuilder';
 import { useDownloadPdf } from '../pdf/useDownloadPdf';
 import { spacing, type } from '../theme/tokens';
@@ -33,6 +34,8 @@ import { spacing, type } from '../theme/tokens';
 type Props = StackScreenProps<RootStackParamList, 'PageViewer'>;
 
 const CONTROLS_HIDE_MS = 3000;
+/** Max finger travel (px) for a tap to count as a tap, not a swipe. */
+const TAP_SLOP = 12;
 
 /**
  * Fullscreen slide viewer: swipes horizontally through a template's page
@@ -40,10 +43,15 @@ const CONTROLS_HIDE_MS = 3000;
  * template name, download icon, page counter) fades in on tap and auto-hides
  * for a clean full-bleed view. Neighbouring pages scale/fade during the
  * swipe for a tactile slide feel.
+ *
+ * Tap detection uses raw touch events with a movement threshold instead of a
+ * wrapping Pressable — a Pressable parent steals the pan responder from the
+ * FlatList and makes swiping fail/crash on Android.
  */
 const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   const { templateId } = route.params;
   const { pendingInvoice } = useInvoice();
+  const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const { download, downloading } = useDownloadPdf();
 
@@ -52,7 +60,8 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [controlsVisible, setControlsVisible] = useState(true);
-  const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const touchOrigin = useRef<{ x: number; y: number } | null>(null);
   const controlsOpacity = useSharedValue(1);
   const scrollX = useSharedValue(0);
 
@@ -83,6 +92,27 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
     else showControls();
   };
 
+  // Tap detection without stealing the FlatList's scroll gesture.
+  const onTouchStart = (e: GestureResponderEvent) => {
+    touchOrigin.current = {
+      x: e.nativeEvent.pageX,
+      y: e.nativeEvent.pageY,
+    };
+  };
+
+  const onTouchEnd = (e: GestureResponderEvent) => {
+    const origin = touchOrigin.current;
+    touchOrigin.current = null;
+    if (!origin) return;
+    const dx = Math.abs(e.nativeEvent.pageX - origin.x);
+    const dy = Math.abs(e.nativeEvent.pageY - origin.y);
+    if (dx <= TAP_SLOP && dy <= TAP_SLOP) toggleControls();
+  };
+
+  const onTouchCancel = () => {
+    touchOrigin.current = null;
+  };
+
   const onScroll = useAnimatedScrollHandler((e) => {
     scrollX.value = e.contentOffset.x;
   });
@@ -104,18 +134,19 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   }));
 
   return (
-    <View style={styles.fullScreen}>
+    <View style={[styles.fullScreen, { backgroundColor: colors.background }]}>
       <StatusBar hidden />
 
-      {/* Pages — tap toggles the chrome */}
-      <Pressable
+      {/* Pages — raw touch events detect taps without blocking swipes */}
+      <View
         style={styles.flex}
-        onPress={toggleControls}
-        accessibilityLabel="Toggle controls"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchCancel}
       >
         {pages.length === 0 ? (
           <View style={styles.emptyWrap}>
-            <Text style={styles.emptyText}>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
               No pages to preview for this template.
             </Text>
           </View>
@@ -130,11 +161,16 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
             scrollEventThrottle={16}
             onMomentumScrollEnd={onPageChange}
             renderItem={({ item, index }) => (
-              <PageSlide item={item} index={index} width={width} scrollX={scrollX} />
+              <PageSlide
+                item={item}
+                index={index}
+                width={width}
+                scrollX={scrollX}
+              />
             )}
           />
         )}
-      </Pressable>
+      </View>
 
       {/* Chrome overlay — fades with the controls */}
       <Animated.View
@@ -236,10 +272,10 @@ const PageSlide: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  fullScreen: { flex: 1, backgroundColor: '#000000' },
+  fullScreen: { flex: 1 },
   flex: { flex: 1 },
   emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  emptyText: { color: '#FFFFFF', fontSize: type.body },
+  emptyText: { fontSize: type.body },
   pageWrap: {
     flex: 1,
     alignItems: 'center',
