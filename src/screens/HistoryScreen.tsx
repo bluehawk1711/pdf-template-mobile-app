@@ -19,6 +19,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useInvoice } from '../context/InvoiceContext';
 import { formatDate } from '../invoice/format';
 import { spacing, radii, type, AppColors } from '../theme/tokens';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 type HistoryScreenNavigationProp =
   StackNavigationProp<RootStackParamList, 'History'>;
@@ -138,8 +139,12 @@ const HistoryScreen: React.FC<Props> = ({ navigation }) => {
           <FlatList
             data={filteredDocs}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <HistoryCard doc={item} colors={colors} onPress={() => open(item)} />
+            renderItem={({ item, index }) => (
+              <Animated.View
+                entering={FadeInUp.delay(index * 60).duration(300)}
+              >
+                <HistoryCard doc={item} colors={colors} onPress={() => open(item)} />
+              </Animated.View>
             )}
             refreshControl={
               <RefreshControl

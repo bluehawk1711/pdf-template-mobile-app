@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackScreenProps } from '@react-navigation/stack';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { RootStackParamList } from '../types';
 import { getTemplates } from '../templates/registry';
@@ -64,12 +65,14 @@ const TemplateSelectionScreen: React.FC<Props> = ({ navigation, route }) => {
         keyExtractor={(t) => t.id}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <TemplateCard
-            template={item}
-            selected={selectedId === item.id}
-            onPress={() => goWithTemplate(item.id)}
-          />
+        renderItem={({ item, index }) => (
+          <Animated.View entering={FadeInDown.delay(index * 80).duration(350)}>
+            <TemplateCard
+              template={item}
+              selected={selectedId === item.id}
+              onPress={() => goWithTemplate(item.id)}
+            />
+          </Animated.View>
         )}
       />
 

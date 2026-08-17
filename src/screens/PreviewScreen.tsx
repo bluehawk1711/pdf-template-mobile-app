@@ -3,6 +3,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Button, ActivityIndicator, Text } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -115,7 +116,11 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
 
       <View style={{ flex: 1 }}>
         {htmlContent ? (
-          <WebView
+          <Animated.View
+            entering={FadeIn.duration(300)}
+            style={{ flex: 1 }}
+          >
+            <WebView
             originWhitelist={['*']}
             source={{
               html: `
@@ -153,6 +158,7 @@ const PreviewScreen: React.FC<Props> = ({ route, navigation }) => {
             }}
             style={{ flex: 1, backgroundColor: colors.background }}
           />
+          </Animated.View>
         ) : (
           <ActivityIndicator style={{ marginTop: 40 }} />
         )}

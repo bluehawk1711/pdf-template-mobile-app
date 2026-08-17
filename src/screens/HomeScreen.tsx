@@ -4,6 +4,7 @@ import { Text, IconButton } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerActions, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { RootStackParamList } from '../types';
 import { useInvoice } from '../context/InvoiceContext';
@@ -120,13 +121,17 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         {/* Template cards */}
-        {templates.map((template) => (
-          <TemplateCard
+        {templates.map((template, i) => (
+          <Animated.View
             key={template.id}
-            template={template}
-            colors={colors}
-            onPress={() => openTemplate(template)}
-          />
+            entering={FadeInDown.delay(i * 80).duration(350)}
+          >
+            <TemplateCard
+              template={template}
+              colors={colors}
+              onPress={() => openTemplate(template)}
+            />
+          </Animated.View>
         ))}
 
         {/* Recent documents */}
@@ -154,33 +159,37 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               </Text>
             </View>
           ) : (
-            recent.map((doc) => (
-              <Pressable
+            recent.map((doc, i) => (
+              <Animated.View
                 key={doc.id}
-                onPress={() => openDocument(doc)}
-                accessibilityRole="button"
-                accessibilityLabel={`Open ${doc.templateId} document from ${formatDate(doc.createdAt)}`}
-                style={({ pressed }) => [
-                  styles.recentCard,
-                  { backgroundColor: colors.card, borderColor: colors.separator },
-                  pressed && { opacity: 0.8 },
-                ]}
+                entering={FadeInDown.delay(200 + i * 60).duration(350)}
               >
-                <View style={styles.recentLeft}>
-                  <Text
-                    style={[styles.recentName, { color: colors.text }]}
-                    numberOfLines={1}
-                  >
-                    {getTemplate(doc.templateId)?.name ?? doc.templateId}
-                  </Text>
-                  <Text
-                    style={[styles.recentMeta, { color: colors.textSecondary }]}
-                  >
-                    PDF · {formatDate(doc.createdAt)}
-                  </Text>
-                </View>
-                <IconButton icon="chevron-right" iconColor={colors.textMuted} />
-              </Pressable>
+                <Pressable
+                  onPress={() => openDocument(doc)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Open ${doc.templateId} document from ${formatDate(doc.createdAt)}`}
+                  style={({ pressed }) => [
+                    styles.recentCard,
+                    { backgroundColor: colors.card, borderColor: colors.separator },
+                    pressed && { opacity: 0.8 },
+                  ]}
+                >
+                  <View style={styles.recentLeft}>
+                    <Text
+                      style={[styles.recentName, { color: colors.text }]}
+                      numberOfLines={1}
+                    >
+                      {getTemplate(doc.templateId)?.name ?? doc.templateId}
+                    </Text>
+                    <Text
+                      style={[styles.recentMeta, { color: colors.textSecondary }]}
+                    >
+                      PDF · {formatDate(doc.createdAt)}
+                    </Text>
+                  </View>
+                  <IconButton icon="chevron-right" iconColor={colors.textMuted} />
+                </Pressable>
+              </Animated.View>
             ))
           )}
         </View>

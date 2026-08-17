@@ -1,33 +1,48 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   View,
   FlatList,
   StyleSheet,
   Image,
+  Pressable,
   useWindowDimensions,
+  ActivityIndicator,
 } from 'react-native';
-import { Text, Button, IconButton } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, IconButton } from 'react-native-paper';
+import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { StackScreenProps } from '@react-navigation/stack';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedScrollHandler,
+  interpolate,
+  Extrapolation,
+  withTiming,
+  SharedValue,
+} from 'react-native-reanimated';
 
 import { RootStackParamList } from '../types';
+import { TemplatePage } from '../templates/types';
 import { getTemplate } from '../templates/registry';
 import { useInvoice } from '../context/InvoiceContext';
-import { useTheme } from '../context/ThemeContext';
 import { buildDefaultInvoice } from '../invoice/formBuilder';
 import { useDownloadPdf } from '../pdf/useDownloadPdf';
 import { spacing, type } from '../theme/tokens';
 
 type Props = StackScreenProps<RootStackParamList, 'PageViewer'>;
 
+const CONTROLS_HIDE_MS = 3000;
+
 /**
- * Slide viewer: swipes horizontally through a template's page images
- * (e.g. the 9 K.L LAB brochure pages). Pages come from the template's
- * `pages` registry entry — no PDF rendering, no template-id branching.
+ * Fullscreen slide viewer: swipes horizontally through a template's page
+ * images (e.g. the 9 K.L LAB brochure pages). The chrome (back button,
+ * template name, download icon, page counter) fades in on tap and auto-hides
+ * for a clean full-bleed view. Neighbouring pages scale/fade during the
+ * swipe for a tactile slide feel.
  */
 const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   const { templateId } = route.params;
-  const { colors } = useTheme();
   const { pendingInvoice } = useInvoice();
   const { width } = useWindowDimensions();
   const { download, downloading } = useDownloadPdf();
@@ -36,6 +51,10 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   const pages = template?.pages ?? [];
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const controlsOpacity = useSharedValue(1);
+  const scrollX = useSharedValue(0);
 
   const invoice = useMemo(
     () => pendingInvoice ?? buildDefaultInvoice({ templateId }),
@@ -47,126 +66,225 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
     [template, invoice]
   );
 
-  const handleDownload = () => {
-    download(html, invoice, { mode: 'invoice' });
+  const showControls = () => {
+    setControlsVisible(true);
+    controlsOpacity.value = withTiming(1, { duration: 200 });
+    clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(hideControls, CONTROLS_HIDE_MS);
   };
+
+  const hideControls = () => {
+    setControlsVisible(false);
+    controlsOpacity.value = withTiming(0, { duration: 200 });
+  };
+
+  const toggleControls = () => {
+    if (controlsVisible) hideControls();
+    else showControls();
+  };
+
+  const onScroll = useAnimatedScrollHandler((e) => {
+    scrollX.value = e.contentOffset.x;
+  });
 
   const onPageChange = (e: {
     nativeEvent: { contentOffset: { x: number } };
   }) => {
     const index = Math.round(e.nativeEvent.contentOffset.x / width);
     if (index !== activeIndex) setActiveIndex(index);
+    hideControls();
   };
 
+  const handleDownload = () => {
+    download(html, invoice, { mode: 'invoice' });
+  };
+
+  const controlsStyle = useAnimatedStyle(() => ({
+    opacity: controlsOpacity.value,
+  }));
+
   return (
-    <SafeAreaView
-      style={[styles.safeArea, { backgroundColor: colors.background }]}
-    >
-      {/* Header: back + template name + page counter */}
-      <View style={styles.header}>
-        <IconButton
-          icon="arrow-left"
-          onPress={() => navigation.goBack()}
-          accessibilityLabel="Go back"
-        />
-        <View style={styles.headerCenter}>
-          <Text
-            style={[styles.title, { color: colors.text }]}
-            numberOfLines={1}
-          >
-            {template?.name ?? 'Template'}
-          </Text>
-          <Text style={[styles.counter, { color: colors.textSecondary }]}>
-            {pages.length > 0 ? `${activeIndex + 1} / ${pages.length}` : ''}
-          </Text>
-        </View>
-        <View style={styles.headerSpacer} />
-      </View>
+    <View style={styles.fullScreen}>
+      <StatusBar hidden />
 
-      {pages.length === 0 ? (
-        <View style={styles.emptyWrap}>
-          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-            No pages to preview for this template.
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={pages}
-          keyExtractor={(_, i) => String(i)}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={onPageChange}
-          renderItem={({ item }) => (
-            <View
-              style={[
-                styles.pageWrap,
-                {
-                  width,
-                  backgroundColor: colors.background,
-                },
-              ]}
-            >
-              <Image
-                source={{ uri: item.uri }}
-                resizeMode="contain"
-                style={{
-                  width,
-                  height: width * (item.height / item.width),
-                }}
-                accessibilityIgnoresInvertColors
-              />
-            </View>
-          )}
-        />
-      )}
+      {/* Pages — tap toggles the chrome */}
+      <Pressable
+        style={styles.flex}
+        onPress={toggleControls}
+        accessibilityLabel="Toggle controls"
+      >
+        {pages.length === 0 ? (
+          <View style={styles.emptyWrap}>
+            <Text style={styles.emptyText}>
+              No pages to preview for this template.
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={pages}
+            keyExtractor={(_, i) => String(i)}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
+            onMomentumScrollEnd={onPageChange}
+            renderItem={({ item, index }) => (
+              <PageSlide item={item} index={index} width={width} scrollX={scrollX} />
+            )}
+          />
+        )}
+      </Pressable>
 
-      <View style={[styles.footer, { borderTopColor: colors.separator }]}>
-        <Button
-          mode="contained"
-          buttonColor={colors.primary}
-          textColor={colors.onPrimary}
-          onPress={handleDownload}
-          loading={downloading}
-          style={styles.button}
+      {/* Chrome overlay — fades with the controls */}
+      <Animated.View
+        pointerEvents={controlsVisible ? 'box-none' : 'none'}
+        style={[StyleSheet.absoluteFill, controlsStyle]}
+      >
+        <LinearGradient
+          colors={['rgba(0,0,0,0.55)', 'rgba(0,0,0,0)']}
+          style={styles.topGradient}
+          pointerEvents="box-none"
         >
-          Download PDF
-        </Button>
-      </View>
-    </SafeAreaView>
+          <View style={styles.topBar}>
+            <IconButton
+              icon="arrow-left"
+              iconColor="#FFFFFF"
+              onPress={() => navigation.goBack()}
+              accessibilityLabel="Go back"
+              style={styles.chromeButton}
+            />
+            <Text
+              style={styles.title}
+              numberOfLines={1}
+              accessibilityLabel={`${template?.name ?? 'Template'} pages`}
+            >
+              {template?.name ?? 'Template'}
+            </Text>
+            {downloading ? (
+              <View style={styles.chromeButton}>
+                <ActivityIndicator color="#FFFFFF" />
+              </View>
+            ) : (
+              <IconButton
+                icon="download"
+                iconColor="#FFFFFF"
+                onPress={handleDownload}
+                accessibilityLabel="Download PDF"
+                style={styles.chromeButton}
+              />
+            )}
+          </View>
+        </LinearGradient>
+
+        <LinearGradient
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.55)']}
+          style={styles.bottomGradient}
+          pointerEvents="none"
+        >
+          <View style={styles.bottomBar}>
+            <View style={styles.counterPill}>
+              <Text style={styles.counterText}>
+                {pages.length > 0 ? `${activeIndex + 1} / ${pages.length}` : ''}
+              </Text>
+            </View>
+          </View>
+        </LinearGradient>
+      </Animated.View>
+    </View>
+  );
+};
+
+/** One slide — scales down + fades neighbours for a smooth page-turn feel. */
+const PageSlide: React.FC<{
+  item: TemplatePage;
+  index: number;
+  width: number;
+  scrollX: SharedValue<number>;
+}> = ({ item, index, width, scrollX }) => {
+  const style = useAnimatedStyle(() => {
+    const center = index * width;
+    const start = center - width;
+    const end = center + width;
+    const opacity = interpolate(
+      scrollX.value,
+      [start, center, end],
+      [0.3, 1, 0.3],
+      Extrapolation.CLAMP
+    );
+    const scale = interpolate(
+      scrollX.value,
+      [start, center, end],
+      [0.92, 1, 0.92],
+      Extrapolation.CLAMP
+    );
+    return { opacity, transform: [{ scale }] };
+  });
+
+  return (
+    <View style={[styles.pageWrap, { width }]}>
+      <Animated.View style={[styles.pageInner, style]}>
+        <Image
+          source={{ uri: item.uri }}
+          resizeMode="contain"
+          style={styles.pageImage}
+          accessibilityIgnoresInvertColors
+        />
+      </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  headerCenter: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: { fontSize: type.headline, fontWeight: '700' },
-  counter: { fontSize: type.caption1, marginTop: 2 },
-  headerSpacer: { width: 48 },
+  fullScreen: { flex: 1, backgroundColor: '#000000' },
+  flex: { flex: 1 },
   emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  emptyText: { fontSize: type.body },
+  emptyText: { color: '#FFFFFF', fontSize: type.body },
   pageWrap: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: spacing.md,
   },
-  footer: {
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
+  pageInner: { flex: 1, width: '100%' },
+  pageImage: { flex: 1, width: '100%' },
+  topGradient: { position: 'absolute', top: 0, left: 0, right: 0 },
+  bottomGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
-  button: { borderRadius: 14 },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: spacing.sm,
+    paddingHorizontal: spacing.sm,
+  },
+  title: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: type.headline,
+    fontWeight: '700',
+    paddingHorizontal: spacing.sm,
+  },
+  chromeButton: {
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    borderRadius: 20,
+    margin: 0,
+  },
+  bottomBar: {
+    alignItems: 'center',
+    paddingBottom: spacing.xxl,
+    paddingTop: spacing.xxxl,
+  },
+  counterPill: {
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    borderRadius: 999,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xs,
+  },
+  counterText: { color: '#FFFFFF', fontSize: type.footnote, fontWeight: '600' },
 });
 
 export default PageViewerScreen;
