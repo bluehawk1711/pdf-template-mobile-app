@@ -15,7 +15,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  useAnimatedScrollHandler,
   interpolate,
   Extrapolation,
   withTiming,
@@ -113,9 +112,13 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
     touchOrigin.current = null;
   };
 
-  const onScroll = useAnimatedScrollHandler((e) => {
-    scrollX.value = e.contentOffset.x;
-  });
+  // Plain JS scroll handler — useAnimatedScrollHandler is a documented crash
+  // source on Android Fabric (reanimated#8907). Writing the shared value from
+  // the JS thread keeps the per-page scale/fade effect on the UI thread
+  // (reanimated#9266 workaround).
+  const onScroll = (e: { nativeEvent: { contentOffset: { x: number } } }) => {
+    scrollX.value = e.nativeEvent.contentOffset.x;
+  };
 
   const onPageChange = (e: {
     nativeEvent: { contentOffset: { x: number } };

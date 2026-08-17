@@ -9,6 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - task: assembleRelease
+            artifact: templates-release-apk
+          - task: assembleDebug
+            artifact: templates-dev-apk
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,13 +44,13 @@ jobs:
       - name: Generate native project
         run: npx expo prebuild --platform android --no-install
 
-      - name: Build release APK
-        run: ./gradlew assembleRelease
+      - name: Build APK
+        run: ./gradlew ${{ matrix.task }}
         working-directory: android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: templates-release-apk
-          path: android/app/build/outputs/apk/release/*.apk
+          name: ${{ matrix.artifact }}
+          path: android/app/build/outputs/apk/*/*.apk
           if-no-files-found: error
