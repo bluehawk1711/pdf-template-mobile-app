@@ -8,6 +8,9 @@
     "scheme": "gpstudio",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "plugins": [
+      "expo-dev-client"
+    ],
     "splash": {
       "image": "./assets/logo-final.png",
       "resizeMode": "contain",
