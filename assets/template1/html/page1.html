@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KL LAB - The Superior Piece In Your Hands</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 912px;
+            height: 1178px;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Gold corner accents */
+        .corner {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #d4af37;
+            z-index: 10;
+        }
+        .corner-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .corner-tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .corner-bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .corner-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        /* Wave decorative elements */
+        .wave-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(180deg, #8B4513 0%, #D2691E 30%, #CD853F 60%, transparent 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 40%, 80% 60%, 60% 45%, 40% 65%, 20% 50%, 0 70%);
+            opacity: 0.7;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Circular lab image */
+        .lab-circle {
+            position: absolute;
+            top: 300px;
+            left: 100px;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 8px solid #e91e63;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: scaleIn 1.2s ease-out 0.3s both;
+        }
+        .lab-circle::before {
+            content: "🔬";
+            font-size: 80px;
+        }
+
+        /* Title */
+        .title {
+            position: absolute;
+            top: 180px;
+            right: 80px;
+            width: 450px;
+            text-align: right;
+            font-size: 36px;
+            color: #5d4037;
+            font-style: italic;
+            line-height: 1.3;
+            animation: slideInRight 1s ease-out 0.5s both;
+        }
+
+        /* KL LAB text */
+        .kl-lab-text {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #8B4513;
+            letter-spacing: 8px;
+            animation: fadeIn 1.5s ease-out 1s both;
+        }
+
+        /* Capsule/pill placeholders */
+        .capsule {
+            position: absolute;
+            width: 60px;
+            height: 25px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #e53935 50%, #ffffff 50%);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        .capsule-1 { bottom: 250px; right: 150px; transform: rotate(-15deg); animation: fadeIn 1s ease-out 1.2s both; }
+        .capsule-2 { bottom: 280px; right: 220px; transform: rotate(10deg); animation: fadeIn 1s ease-out 1.4s both; }
+        .capsule-3 { bottom: 220px; right: 280px; transform: rotate(-5deg); animation: fadeIn 1s ease-out 1.6s both; }
+
+        .pill {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        .pill-1 { bottom: 300px; right: 100px; animation: fadeIn 1s ease-out 1.3s both; }
+        .pill-2 { bottom: 350px; right: 180px; animation: fadeIn 1s ease-out 1.5s both; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <div class="wave-top"></div>
+
+    <div class="title">The Superior Piece In Your Hands...</div>
+
+    <div class="lab-circle"></div>
+
+    <div class="capsule capsule-1"></div>
+    <div class="capsule capsule-2"></div>
+    <div class="capsule capsule-3"></div>
+    <div class="pill pill-1"></div>
+    <div class="pill pill-2"></div>
+
+    <div class="kl-lab-text">KL LAB</div>
+</body>
+</html>

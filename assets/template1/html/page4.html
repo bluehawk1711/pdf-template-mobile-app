@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quocal MAX - Recurrent Low Back Pain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1272px;
+            height: 832px;
+            font-family: 'Arial', sans-serif;
+            background: #f5f0e8;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Left side */
+        .left-side {
+            width: 50%;
+            height: 100%;
+            position: relative;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .back-pain-title {
+            font-size: 28px;
+            color: #8B0000;
+            font-style: italic;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .woman-back-pain {
+            width: 280px;
+            height: 300px;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 20px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            animation: scaleIn 1.2s ease-out 0.3s both;
+        }
+
+        .osteoporosis-text {
+            font-size: 24px;
+            color: #5d4037;
+            text-align: center;
+            margin-top: 30px;
+            font-style: italic;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .wave-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(0deg, #d7ccc8 0%, transparent 100%);
+            clip-path: polygon(0 100%, 100% 100%, 100% 40%, 80% 60%, 60% 35%, 40% 55%, 20% 30%, 0 50%);
+            animation: fadeIn 1s ease-out 0.9s both;
+        }
+
+        /* Right side */
+        .right-side {
+            width: 50%;
+            height: 100%;
+            padding: 40px;
+            position: relative;
+        }
+
+        .rx-symbol {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 60px;
+            color: #8B4513;
+            font-weight: bold;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .brand-name {
+            font-size: 48px;
+            color: #8B4513;
+            font-weight: bold;
+            margin-top: 80px;
+            animation: slideInRight 1s ease-out 0.2s both;
+        }
+
+        .brand-name .max {
+            background: #000;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+
+        .composition {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .ingredient-list {
+            margin-top: 30px;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .ingredient-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .ingredient-item::before {
+            content: "•";
+            color: #8B4513;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tagline {
+            font-size: 28px;
+            color: #8B4513;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 40px;
+            animation: fadeIn 1s ease-out 0.8s both;
+        }
+
+        .product-codes {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        .code {
+            background: #8B4513;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-side">
+        <div class="back-pain-title">Recurrent low Back Pain with Hypertension & Diabetes....</div>
+        <div class="woman-back-pain">🤕</div>
+        <div class="osteoporosis-text">....may lead to Osteoporosis</div>
+        <div class="wave-bottom"></div>
+    </div>
+
+    <div class="right-side">
+        <div class="rx-symbol">℞</div>
+        <div class="brand-name">Quocal <span class="max">MAX</span></div>
+        <div class="composition">Calcitriol 0.25mcg + Methylcobalamin 500mcg + Folic Acid 5mg + Omega-3-Fatty Acids 100mg + Boron 3mg + Calcium 250mg Capsules</div>
+
+        <div class="ingredient-list">
+            <div class="ingredient-item">Calcitriol: Active form of Vitamin D for calcium absorption</div>
+            <div class="ingredient-item">Methylcobalamin: Active B12 for nerve health</div>
+            <div class="ingredient-item">Folic Acid: Essential for cell division and growth</div>
+            <div class="ingredient-item">Omega-3-Fatty Acids: Anti-inflammatory properties</div>
+            <div class="ingredient-item">Boron: Supports bone density and metabolism</div>
+            <div class="ingredient-item">Calcium: Essential mineral for bone strength</div>
+        </div>
+
+        <div class="tagline">Tune The Bone</div>
+
+        <div class="product-codes">
+            <div class="code">Q1U</div>
+            <div class="code">MCF</div>
+            <div class="code">MCC</div>
+            <div class="code">QSP</div>
+            <div class="code">OSR</div>
+        </div>
+    </div>
+</body>
+</html>

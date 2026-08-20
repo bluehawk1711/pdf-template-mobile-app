@@ -18,6 +18,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Carousel } from 'react-native-reanimated-carousel';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { WebView } from 'react-native-webview';
+import * as FileSystem from 'expo-file-system';
 
 import { RootStackParamList } from '../types';
 import { TemplatePage } from '../templates/types';
@@ -218,19 +220,41 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 };
 
-/** One slide — renders animated page component or falls back to flat image. */
+/** One slide — renders HTML in WebView, animated component, or falls back to flat image. */
 const PageSlide: React.FC<{
   item: TemplatePage;
   index: number;
 }> = ({ item, index }) => {
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const AnimatedPageComponent = getPageComponent(index);
+
+  // Load HTML content if htmlPath is available
+  React.useEffect(() => {
+    if (item.htmlPath) {
+      FileSystem.readAsStringAsync(item.htmlPath)
+        .then(setHtmlContent)
+        .catch(() => setHtmlContent(null));
+    }
+  }, [item.htmlPath]);
 
   return (
     <View style={styles.pageWrap}>
       <View style={styles.pageInner}>
-        {AnimatedPageComponent ? (
+        {htmlContent ? (
+          // Render HTML in WebView
+          <WebView
+            source={{ html: htmlContent }}
+            style={styles.webview}
+            scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            originWhitelist={['*']}
+          />
+        ) : AnimatedPageComponent ? (
+          // Render animated page component
           <AnimatedPageComponent />
         ) : (
+          // Fallback to flat image
           <Image
             source={{ uri: item.uri }}
             resizeMode="contain"
@@ -255,6 +279,10 @@ const styles = StyleSheet.create({
   },
   pageInner: { flex: 1, width: '100%' },
   pageImage: { flex: 1, width: '100%' },
+  webview: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   topGradient: { position: 'absolute', top: 0, left: 0, right: 0 },
   bottomGradient: {
     position: 'absolute',

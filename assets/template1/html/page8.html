@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLRAB-DSR - Acidity with Reflux</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1069px;
+            height: 707px;
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Gray wave decorations */
+        .wave-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(180deg, #e0e0e0 0%, transparent 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 40%, 80% 70%, 60% 45%, 40% 65%, 20% 40%, 0 60%);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .acidity-text {
+            position: absolute;
+            top: 30px;
+            left: 50px;
+            font-size: 26px;
+            color: #555;
+            font-style: italic;
+            z-index: 1;
+            animation: slideInLeft 1s ease-out 0.2s both;
+        }
+
+        .brand-name {
+            position: absolute;
+            top: 80px;
+            left: 50px;
+            font-size: 42px;
+            font-weight: bold;
+            z-index: 1;
+            animation: slideInLeft 1s ease-out 0.4s both;
+        }
+
+        .brand-name .klrab {
+            color: #e65100;
+        }
+
+        .brand-name .dsr {
+            background: #e65100;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+
+        .composition {
+            position: absolute;
+            top: 140px;
+            left: 50px;
+            font-size: 14px;
+            color: #666;
+            z-index: 1;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        /* Anatomical images in blue circles */
+        .anatomy-circle {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid #1565c0;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .torso-fire {
+            top: 200px;
+            left: 50px;
+            animation: scaleIn 1.2s ease-out 0.8s both;
+        }
+
+        .man-stomach {
+            top: 200px;
+            left: 250px;
+            animation: scaleIn 1.2s ease-out 1s both;
+        }
+
+        /* Orange callout boxes */
+        .callout-box {
+            position: absolute;
+            background: #e65100;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 280px;
+            animation: fadeIn 1s ease-out 1.2s both;
+        }
+
+        .rabprazole-box {
+            top: 200px;
+            right: 350px;
+        }
+
+        .domperidone-box {
+            top: 350px;
+            right: 350px;
+        }
+
+        .callout-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .callout-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* APT Answer section */
+        .apt-section {
+            position: absolute;
+            top: 400px;
+            left: 50px;
+            width: 350px;
+            animation: fadeIn 1s ease-out 1.4s both;
+        }
+
+        .apt-title {
+            font-size: 20px;
+            color: #e65100;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .apt-list {
+            list-style: disc;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .apt-list li {
+            margin-bottom: 8px;
+        }
+
+        /* Tagline */
+        .tagline {
+            position: absolute;
+            bottom: 80px;
+            left: 50px;
+            font-size: 22px;
+            color: #e65100;
+            font-weight: bold;
+            animation: fadeIn 1s ease-out 1.6s both;
+        }
+
+        .tagline-sub {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            font-size: 16px;
+            color: #666;
+            animation: fadeIn 1s ease-out 1.8s both;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="wave-top"></div>
+
+    <div class="acidity-text">When Acidity with Reflux Bothers your Patients</div>
+
+    <div class="brand-name">
+        <span class="klrab">KLRAB</span>-<span class="dsr">DSR</span>
+    </div>
+    <div class="composition">Rabeprazole 20 mg & Domperidone 30 mg SR CAPSULES</div>
+
+    <div class="anatomy-circle torso-fire">🔥</div>
+    <div class="anatomy-circle man-stomach">🤢</div>
+
+    <div class="callout-box rabprazole-box">
+        <div class="callout-title">RABEPRAZOLE</div>
+        <div class="callout-text">Proton pump inhibitor that reduces gastric acid secretion</div>
+    </div>
+
+    <div class="callout-box domperidone-box">
+        <div class="callout-title">DOMPERIDONE</div>
+        <div class="callout-text">Prokinetic agent that enhances gastric motility</div>
+    </div>
+
+    <div class="apt-section">
+        <div class="apt-title">The APT Answer to Control</div>
+        <ul class="apt-list">
+            <li>Effective acid suppression</li>
+            <li>Improved gastric emptying</li>
+            <li>Better patient compliance</li>
+            <li>Once daily dosing</li>
+        </ul>
+    </div>
+
+    <div class="tagline">For Total Relief From Distressing Symptoms</div>
+    <div class="tagline-sub">KLRAB-DSR: The complete solution for GERD</div>
+</body>
+</html>

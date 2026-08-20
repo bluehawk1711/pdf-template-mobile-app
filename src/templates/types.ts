@@ -47,6 +47,8 @@ export interface TemplatePage {
   width: number;
   /** Pixel height (aspect ratio for layout). */
   height: number;
+  /** Optional HTML template path for WebView rendering. If set, renders HTML instead of image. */
+  htmlPath?: string;
 }
 
 export interface InvoiceTemplate {

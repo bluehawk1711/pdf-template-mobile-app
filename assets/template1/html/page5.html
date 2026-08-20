@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUKOCEF-200 mg - In RTI, UTI & SSTI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 589px;
+            height: 725px;
+            font-family: 'Arial', sans-serif;
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Red decorative top */
+        .red-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(90deg, #d32f2f 0%, #e53935 50%, #d32f2f 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 60%, 80% 100%, 60% 70%, 40% 90%, 20% 60%, 0 80%);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .title {
+            position: absolute;
+            top: 100px;
+            left: 30px;
+            font-size: 28px;
+            color: #d32f2f;
+            font-weight: bold;
+            animation: slideInLeft 1s ease-out 0.2s both;
+        }
+
+        .brand-name {
+            position: absolute;
+            top: 150px;
+            left: 30px;
+            font-size: 36px;
+            color: #d32f2f;
+            font-weight: bold;
+            animation: slideInLeft 1s ease-out 0.4s both;
+        }
+
+        .composition {
+            position: absolute;
+            top: 200px;
+            left: 30px;
+            font-size: 14px;
+            color: #666;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        /* Target/dart board */
+        .target {
+            position: absolute;
+            top: 250px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: repeating-radial-gradient(
+                circle,
+                #ffffff 0px,
+                #ffffff 20px,
+                #d32f2f 20px,
+                #d32f2f 40px
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            animation: scaleIn 1.2s ease-out 0.8s both;
+        }
+
+        .feature-list {
+            position: absolute;
+            top: 480px;
+            left: 30px;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .feature-item::before {
+            content: "•";
+            color: #d32f2f;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .indication-section {
+            position: absolute;
+            top: 560px;
+            left: 30px;
+            animation: fadeIn 1s ease-out 1.2s both;
+        }
+
+        .indication-title {
+            font-size: 18px;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .indication-list {
+            list-style: disc;
+            padding-left: 20px;
+            font-size: 13px;
+            color: #444;
+        }
+
+        .indication-list li {
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            position: absolute;
+            bottom: 80px;
+            left: 30px;
+            font-size: 22px;
+            color: #d32f2f;
+            font-weight: bold;
+            font-style: italic;
+            animation: fadeIn 1s ease-out 1.4s both;
+        }
+
+        /* Red decorative bottom */
+        .red-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(90deg, #d32f2f 0%, #e53935 50%, #d32f2f 100%);
+            clip-path: polygon(0 40%, 20% 0, 40% 30%, 60% 10%, 80% 40%, 100% 20%, 100% 100%, 0 100%);
+            animation: fadeIn 0.8s ease-out 1.6s both;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: translateX(-50%) scale(0.8); }
+            to { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="red-top"></div>
+
+    <div class="title">In RTI, UTI & SSTI</div>
+    <div class="brand-name">MUKOCEF-200 mg</div>
+    <div class="composition">Cefpodoxime Proxetil 200 mg Tablets</div>
+
+    <div class="target">🎯</div>
+
+    <div class="feature-list">
+        <div class="feature-item">Third generation oral cephalosporin</div>
+        <div class="feature-item">High stability</div>
+        <div class="feature-item">Convenient BID dosage</div>
+    </div>
+
+    <div class="indication-section">
+        <div class="indication-title">Indications:</div>
+        <ul class="indication-list">
+            <li>Acute Otitis Media</li>
+            <li>Sinusitis</li>
+            <li>UTI</li>
+            <li>Pharyngitis</li>
+            <li>Skin infections</li>
+            <li>Tonsillitis</li>
+            <li>Gonorrhea</li>
+        </ul>
+    </div>
+
+    <div class="tagline">Strike-the Right Target</div>
+
+    <div class="red-bottom"></div>
+</body>
+</html>
