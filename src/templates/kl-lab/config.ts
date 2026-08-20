@@ -2,9 +2,9 @@ import { InvoiceTemplate } from '../types';
 import { renderInvoice } from './pdf';
 import { KL_LAB_PAGES } from './pages.generated';
 
-/** HTML template paths for each page (index-based) */
-const KL_LAB_HTML_PAGES = [
-  require('../../../assets/template1/html/page1.html'),
+/** HTML template paths for pages 2-8 (index-based, 0-indexed) */
+const KL_LAB_HTML_PAGES: (number | undefined)[] = [
+  undefined, // page 1 - use full image
   require('../../../assets/template1/html/page2.html'),
   require('../../../assets/template1/html/page3.html'),
   require('../../../assets/template1/html/page4.html'),
@@ -12,7 +12,7 @@ const KL_LAB_HTML_PAGES = [
   require('../../../assets/template1/html/page6.html'),
   require('../../../assets/template1/html/page7.html'),
   require('../../../assets/template1/html/page8.html'),
-  require('../../../assets/template1/html/page9.html'),
+  undefined, // page 9 - use full image
 ];
 
 /**

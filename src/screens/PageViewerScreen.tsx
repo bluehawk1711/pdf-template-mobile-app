@@ -19,12 +19,11 @@ import Animated, {
 import { Carousel } from 'react-native-reanimated-carousel';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { WebView } from 'react-native-webview';
-import * as FileSystem from 'expo-file-system';
+import { Asset } from 'expo-asset';
 
 import { RootStackParamList } from '../types';
 import { TemplatePage } from '../templates/types';
 import { getTemplate } from '../templates/registry';
-import { getPageComponent } from '../templates/kl-lab/pages';
 import { useInvoice } from '../context/InvoiceContext';
 import { useTheme } from '../context/ThemeContext';
 import { buildDefaultInvoice } from '../invoice/formBuilder';
@@ -220,20 +219,27 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 };
 
-/** One slide — renders HTML in WebView, animated component, or falls back to flat image. */
+/** One slide — renders HTML in WebView or falls back to flat image. */
 const PageSlide: React.FC<{
   item: TemplatePage;
   index: number;
 }> = ({ item, index }) => {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
-  const AnimatedPageComponent = getPageComponent(index);
 
   // Load HTML content if htmlPath is available
   React.useEffect(() => {
     if (item.htmlPath) {
-      FileSystem.readAsStringAsync(item.htmlPath)
-        .then(setHtmlContent)
-        .catch(() => setHtmlContent(null));
+      // Load HTML from Expo asset
+      const asset = Asset.fromModule(item.htmlPath);
+      asset.downloadAsync().then(() => {
+        if (asset.localUri) {
+          // Read the file content
+          fetch(asset.localUri)
+            .then((response) => response.text())
+            .then(setHtmlContent)
+            .catch(() => setHtmlContent(null));
+        }
+      }).catch(() => setHtmlContent(null));
     }
   }, [item.htmlPath]);
 
@@ -250,9 +256,6 @@ const PageSlide: React.FC<{
             showsVerticalScrollIndicator={false}
             originWhitelist={['*']}
           />
-        ) : AnimatedPageComponent ? (
-          // Render animated page component
-          <AnimatedPageComponent />
         ) : (
           // Fallback to flat image
           <Image

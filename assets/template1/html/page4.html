@@ -1,215 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quocal MAX - Recurrent Low Back Pain</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            width: 1272px;
-            height: 832px;
-            font-family: 'Arial', sans-serif;
-            background: #f5f0e8;
-            overflow: hidden;
-            display: flex;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quocal MAX - Recurrent Low Back Pain</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Left side */
-        .left-side {
-            width: 50%;
-            height: 100%;
-            position: relative;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+  body {
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #F5F5DC 0%, #DEB887 50%, #d7ccc8 100%);
+    overflow: hidden;
+    display: flex;
+  }
 
-        .back-pain-title {
-            font-size: 28px;
-            color: #8B0000;
-            font-style: italic;
-            line-height: 1.4;
-            margin-bottom: 30px;
-            animation: slideInLeft 1s ease-out;
-        }
+  .left-side {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    padding: 4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-        .woman-back-pain {
-            width: 280px;
-            height: 300px;
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border-radius: 20px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 120px;
-            animation: scaleIn 1.2s ease-out 0.3s both;
-        }
+  .back-pain-title {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    color: #8B0000;
+    font-style: italic;
+    line-height: 1.4;
+    margin-bottom: 4vh;
+    opacity: 0;
+    animation: slideLeft 0.9s ease-out 0.1s both;
+  }
 
-        .osteoporosis-text {
-            font-size: 24px;
-            color: #5d4037;
-            text-align: center;
-            margin-top: 30px;
-            font-style: italic;
-            animation: fadeIn 1s ease-out 0.6s both;
-        }
+  .woman-back-pain {
+    width: clamp(130px, 22vw, 280px);
+    height: clamp(140px, 25vw, 300px);
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 50%, #ffcc80 100%);
+    border-radius: 3vmin;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: scaleIn 1s ease-out 0.3s both;
+  }
 
-        .wave-bottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(0deg, #d7ccc8 0%, transparent 100%);
-            clip-path: polygon(0 100%, 100% 100%, 100% 40%, 80% 60%, 60% 35%, 40% 55%, 20% 30%, 0 50%);
-            animation: fadeIn 1s ease-out 0.9s both;
-        }
+  .back-pain-inner {
+    width: 60%; height: 65%;
+    background: radial-gradient(ellipse at 50% 30%, rgba(255,152,0,0.25) 0%, rgba(255,183,77,0.15) 50%, transparent 80%);
+    border-radius: 40% 40% 50% 50%;
+    animation: pulse 3s ease-in-out infinite;
+  }
 
-        /* Right side */
-        .right-side {
-            width: 50%;
-            height: 100%;
-            padding: 40px;
-            position: relative;
-        }
+  .osteoporosis-text {
+    font-size: clamp(1rem, 2vw, 1.6rem);
+    color: #5d4037;
+    text-align: center;
+    margin-top: 3vh;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.6s both;
+  }
 
-        .rx-symbol {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            font-size: 60px;
-            color: #8B4513;
-            font-weight: bold;
-            animation: fadeIn 0.8s ease-out;
-        }
+  .wave-bottom {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 12vh;
+    background: linear-gradient(0deg, #d7ccc8 0%, transparent 100%);
+    clip-path: polygon(0 100%, 100% 100%, 100% 40%, 80% 60%, 60% 35%, 40% 55%, 20% 30%, 0 50%);
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.9s both;
+  }
 
-        .brand-name {
-            font-size: 48px;
-            color: #8B4513;
-            font-weight: bold;
-            margin-top: 80px;
-            animation: slideInRight 1s ease-out 0.2s both;
-        }
+  .right-side {
+    width: 50%;
+    height: 100%;
+    padding: 4vw;
+    position: relative;
+  }
 
-        .brand-name .max {
-            background: #000;
-            color: #fff;
-            padding: 5px 15px;
-            border-radius: 5px;
-        }
+  .rx-symbol {
+    position: absolute;
+    top: 3vh; right: 4vw;
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: #8B4513;
+    font-weight: bold;
+    opacity: 0;
+    animation: fadeIn 0.7s ease-out 0.05s both;
+  }
 
-        .composition {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-            animation: fadeIn 1s ease-out 0.4s both;
-        }
+  .brand-name {
+    font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+    color: #8B4513;
+    font-weight: bold;
+    margin-top: 12vh;
+    opacity: 0;
+    animation: slideRight 0.9s ease-out 0.2s both;
+  }
 
-        .ingredient-list {
-            margin-top: 30px;
-            animation: fadeIn 1s ease-out 0.6s both;
-        }
+  .brand-name .max {
+    background: linear-gradient(135deg, #333, #000);
+    color: #fff;
+    padding: 0.5vh 1.2vw;
+    border-radius: 0.5vmin;
+    font-size: 0.7em;
+  }
 
-        .ingredient-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            font-size: 14px;
-            color: #444;
-        }
+  .composition {
+    font-size: clamp(0.7rem, 1.1vw, 1rem);
+    color: #666;
+    margin-top: 1.5vh;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+  }
 
-        .ingredient-item::before {
-            content: "•";
-            color: #8B4513;
-            font-weight: bold;
-            margin-right: 10px;
-        }
+  .ingredient-list {
+    margin-top: 3vh;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.6s both;
+  }
 
-        .tagline {
-            font-size: 28px;
-            color: #8B4513;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 40px;
-            animation: fadeIn 1s ease-out 0.8s both;
-        }
+  .ingredient-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.2vh;
+    font-size: clamp(0.7rem, 1.1vw, 1rem);
+    color: #444;
+  }
 
-        .product-codes {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            animation: fadeIn 1s ease-out 1s both;
-        }
+  .ingredient-item::before {
+    content: "\2022";
+    color: #8B4513;
+    font-weight: bold;
+    margin-right: 1vw;
+    flex-shrink: 0;
+  }
 
-        .code {
-            background: #8B4513;
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+  .tagline {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    color: #8B4513;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 4vh;
+    opacity: 0;
+    animation: slideUp 0.8s ease-out 0.8s both;
+  }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-    </style>
+  .product-codes {
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vh;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 1s both;
+  }
+
+  .code {
+    background: linear-gradient(135deg, #8B4513, #a0522d);
+    color: white;
+    padding: 0.5vh 1vw;
+    font-size: clamp(0.6rem, 0.9vw, 0.8rem);
+    font-weight: bold;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(3vh); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-3vh); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-3vw); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideRight {
+    from { opacity: 0; transform: translateX(3vw); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  @media (max-width: 768px) {
+    body { flex-direction: column; }
+    .left-side, .right-side { width: 100%; height: 50vh; }
+    .woman-back-pain { width: 45vw; height: 45vw; }
+    .brand-name { font-size: clamp(1.5rem, 7vw, 2.5rem); margin-top: 3vh; }
+    .product-codes { display: none; }
+  }
+</style>
 </head>
 <body>
-    <div class="left-side">
-        <div class="back-pain-title">Recurrent low Back Pain with Hypertension & Diabetes....</div>
-        <div class="woman-back-pain">🤕</div>
-        <div class="osteoporosis-text">....may lead to Osteoporosis</div>
-        <div class="wave-bottom"></div>
+  <div class="left-side">
+    <div class="back-pain-title">Recurrent low Back Pain with Hypertension &amp; Diabetes....</div>
+    <div class="woman-back-pain">
+      <div class="back-pain-inner"></div>
+    </div>
+    <div class="osteoporosis-text">....may lead to Osteoporosis</div>
+    <div class="wave-bottom"></div>
+  </div>
+
+  <div class="right-side">
+    <div class="rx-symbol">&#8478;</div>
+    <div class="brand-name">Quocal <span class="max">MAX</span></div>
+    <div class="composition">Calcitriol 0.25mcg + Methylcobalamin 500mcg + Folic Acid 5mg + Omega-3-Fatty Acids 100mg + Boron 3mg + Calcium 250mg Capsules</div>
+
+    <div class="ingredient-list">
+      <div class="ingredient-item">Calcitriol: Active form of Vitamin D for calcium absorption</div>
+      <div class="ingredient-item">Methylcobalamin: Active B12 for nerve health</div>
+      <div class="ingredient-item">Folic Acid: Essential for cell division and growth</div>
+      <div class="ingredient-item">Omega-3-Fatty Acids: Anti-inflammatory properties</div>
+      <div class="ingredient-item">Boron: Supports bone density and metabolism</div>
+      <div class="ingredient-item">Calcium: Essential mineral for bone strength</div>
     </div>
 
-    <div class="right-side">
-        <div class="rx-symbol">℞</div>
-        <div class="brand-name">Quocal <span class="max">MAX</span></div>
-        <div class="composition">Calcitriol 0.25mcg + Methylcobalamin 500mcg + Folic Acid 5mg + Omega-3-Fatty Acids 100mg + Boron 3mg + Calcium 250mg Capsules</div>
+    <div class="tagline">Tune The Bone</div>
 
-        <div class="ingredient-list">
-            <div class="ingredient-item">Calcitriol: Active form of Vitamin D for calcium absorption</div>
-            <div class="ingredient-item">Methylcobalamin: Active B12 for nerve health</div>
-            <div class="ingredient-item">Folic Acid: Essential for cell division and growth</div>
-            <div class="ingredient-item">Omega-3-Fatty Acids: Anti-inflammatory properties</div>
-            <div class="ingredient-item">Boron: Supports bone density and metabolism</div>
-            <div class="ingredient-item">Calcium: Essential mineral for bone strength</div>
-        </div>
-
-        <div class="tagline">Tune The Bone</div>
-
-        <div class="product-codes">
-            <div class="code">Q1U</div>
-            <div class="code">MCF</div>
-            <div class="code">MCC</div>
-            <div class="code">QSP</div>
-            <div class="code">OSR</div>
-        </div>
+    <div class="product-codes">
+      <div class="code">Q1U</div>
+      <div class="code">MCF</div>
+      <div class="code">MCC</div>
+      <div class="code">QSP</div>
+      <div class="code">OSR</div>
     </div>
+  </div>
 </body>
 </html>

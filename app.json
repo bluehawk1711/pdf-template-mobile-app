@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "plugins": [
-      "expo-dev-client"
+      "expo-dev-client",
+      "expo-asset"
     ],
     "splash": {
       "image": "./assets/logo-final.png",
