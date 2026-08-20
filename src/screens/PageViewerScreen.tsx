@@ -1,7 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
   View,
-  FlatList,
   StyleSheet,
   Image,
   useWindowDimensions,
@@ -15,15 +14,15 @@ import { StackScreenProps } from '@react-navigation/stack';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  interpolate,
-  Extrapolation,
   withTiming,
-  SharedValue,
 } from 'react-native-reanimated';
+import { Carousel } from 'react-native-reanimated-carousel';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { RootStackParamList } from '../types';
 import { TemplatePage } from '../templates/types';
 import { getTemplate } from '../templates/registry';
+import { getPageComponent } from '../templates/kl-lab/pages';
 import { useInvoice } from '../context/InvoiceContext';
 import { useTheme } from '../context/ThemeContext';
 import { buildDefaultInvoice } from '../invoice/formBuilder';
@@ -38,20 +37,20 @@ const TAP_SLOP = 12;
 
 /**
  * Fullscreen slide viewer: swipes horizontally through a template's page
- * images (e.g. the 9 K.L LAB brochure pages). The chrome (back button,
+ * images (e.g. the 9 K.L LAB brochure pages). Uses react-native-reanimated-carousel
+ * for smooth gesture interactions and snapping animations. The chrome (back button,
  * template name, download icon, page counter) fades in on tap and auto-hides
- * for a clean full-bleed view. Neighbouring pages scale/fade during the
- * swipe for a tactile slide feel.
+ * for a clean full-bleed view.
  *
  * Tap detection uses raw touch events with a movement threshold instead of a
  * wrapping Pressable — a Pressable parent steals the pan responder from the
- * FlatList and makes swiping fail/crash on Android.
+ * carousel and makes swiping fail/crash on Android.
  */
 const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   const { templateId } = route.params;
   const { pendingInvoice } = useInvoice();
   const { colors } = useTheme();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const { download, downloading } = useDownloadPdf();
 
   const template = getTemplate(templateId);
@@ -62,7 +61,6 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const touchOrigin = useRef<{ x: number; y: number } | null>(null);
   const controlsOpacity = useSharedValue(1);
-  const scrollX = useSharedValue(0);
 
   const invoice = useMemo(
     () => pendingInvoice ?? buildDefaultInvoice({ templateId }),
@@ -91,7 +89,7 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
     else showControls();
   };
 
-  // Tap detection without stealing the FlatList's scroll gesture.
+  // Tap detection without stealing the carousel's scroll gesture.
   const onTouchStart = (e: GestureResponderEvent) => {
     touchOrigin.current = {
       x: e.nativeEvent.pageX,
@@ -112,22 +110,6 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
     touchOrigin.current = null;
   };
 
-  // Plain JS scroll handler — useAnimatedScrollHandler is a documented crash
-  // source on Android Fabric (reanimated#8907). Writing the shared value from
-  // the JS thread keeps the per-page scale/fade effect on the UI thread
-  // (reanimated#9266 workaround).
-  const onScroll = (e: { nativeEvent: { contentOffset: { x: number } } }) => {
-    scrollX.value = e.nativeEvent.contentOffset.x;
-  };
-
-  const onPageChange = (e: {
-    nativeEvent: { contentOffset: { x: number } };
-  }) => {
-    const index = Math.round(e.nativeEvent.contentOffset.x / width);
-    if (index !== activeIndex) setActiveIndex(index);
-    hideControls();
-  };
-
   const handleDownload = () => {
     download(html, invoice, { mode: 'invoice' });
   };
@@ -136,8 +118,13 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
     opacity: controlsOpacity.value,
   }));
 
+  const handleSnapToItem = (index: number) => {
+    setActiveIndex(index);
+    hideControls();
+  };
+
   return (
-    <View style={[styles.fullScreen, { backgroundColor: colors.background }]}>
+    <GestureHandlerRootView style={[styles.fullScreen, { backgroundColor: colors.background }]}>
       <StatusBar hidden />
 
       {/* Pages — raw touch events detect taps without blocking swipes */}
@@ -154,23 +141,20 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
             </Text>
           </View>
         ) : (
-          <FlatList
+          <Carousel
             data={pages}
-            keyExtractor={(_, i) => String(i)}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={onScroll}
-            scrollEventThrottle={16}
-            onMomentumScrollEnd={onPageChange}
             renderItem={({ item, index }) => (
-              <PageSlide
-                item={item}
-                index={index}
-                width={width}
-                scrollX={scrollX}
-              />
+              <PageSlide item={item} index={index} />
             )}
+            style={{ width, height }}
+            layout={{
+              type: 'parallax',
+              offset: 50,
+              scale: 0.9,
+              adjacentScale: 0.8,
+            }}
+            loop={false}
+            onSnapToItem={handleSnapToItem}
           />
         )}
       </View>
@@ -230,46 +214,31 @@ const PageViewerScreen: React.FC<Props> = ({ route, navigation }) => {
           </View>
         </LinearGradient>
       </Animated.View>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
-/** One slide — scales down + fades neighbours for a smooth page-turn feel. */
+/** One slide — renders animated page component or falls back to flat image. */
 const PageSlide: React.FC<{
   item: TemplatePage;
   index: number;
-  width: number;
-  scrollX: SharedValue<number>;
-}> = ({ item, index, width, scrollX }) => {
-  const style = useAnimatedStyle(() => {
-    const center = index * width;
-    const start = center - width;
-    const end = center + width;
-    const opacity = interpolate(
-      scrollX.value,
-      [start, center, end],
-      [0.3, 1, 0.3],
-      Extrapolation.CLAMP
-    );
-    const scale = interpolate(
-      scrollX.value,
-      [start, center, end],
-      [0.92, 1, 0.92],
-      Extrapolation.CLAMP
-    );
-    return { opacity, transform: [{ scale }] };
-  });
+}> = ({ item, index }) => {
+  const AnimatedPageComponent = getPageComponent(index);
 
   return (
-    <View style={[styles.pageWrap, { width }]}>
-      <Animated.View style={[styles.pageInner, style]}>
-        <Image
-          source={{ uri: item.uri }}
-          resizeMode="contain"
-          style={styles.pageImage}
-          accessibilityIgnoresInvertColors
-        />
-      </Animated.View>
+    <View style={styles.pageWrap}>
+      <View style={styles.pageInner}>
+        {AnimatedPageComponent ? (
+          <AnimatedPageComponent />
+        ) : (
+          <Image
+            source={{ uri: item.uri }}
+            resizeMode="contain"
+            style={styles.pageImage}
+            accessibilityIgnoresInvertColors
+          />
+        )}
+      </View>
     </View>
   );
 };
