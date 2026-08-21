@@ -124,9 +124,9 @@ export const Page3: React.FC = () => {
   const fBrand = bW * 0.058;
   const fRx = bW * 0.018;
   const fTm = bW * 0.014;
-  const fComp = bW * 0.013;
-  const fIngH = bW * 0.015;
-  const fIngT = bW * 0.012;
+  const fComp = bW * 0.014;
+  const fIngH = bW * 0.018;
+  const fIngT = bW * 0.014;
   const fIndT = bW * 0.018;
   const fIndX = bW * 0.013;
   const fTag1 = bW * 0.028;
@@ -187,10 +187,10 @@ export const Page3: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* "Good for Mom & Good for Child..." — RIGHT BOTTOM */}
+      {/* "Good for Mom & Good for Child..." — LEFT BOTTOM, after blood cells */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52,
-        top: bT + bH * 0.82,
+        position: 'absolute', left: bL + bW * 0.14,
+        top: bT + bH * 0.78,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
@@ -201,8 +201,8 @@ export const Page3: React.FC = () => {
       </Animated.View>
 
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52,
-        top: bT + bH * 0.82 + fTag1 * 1.3,
+        position: 'absolute', left: bL + bW * 0.14,
+        top: bT + bH * 0.78 + fTag1 * 1.3,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
@@ -254,9 +254,9 @@ export const Page3: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* Ingredient sections — COMPACT, no overlap */}
+      {/* Ingredient sections — bigger, bolder, proper spacing */}
       {INGREDIENTS.map((ing, i) => {
-        const sectionTop = bT + bH * (0.30 + i * 0.12);
+        const sectionTop = bT + bH * (0.28 + i * 0.14);
         return (
           <Animated.View key={ing.title} style={{
             position: 'absolute',
@@ -270,20 +270,20 @@ export const Page3: React.FC = () => {
               backgroundColor: DARK_BROWN_BG,
               alignSelf: 'flex-start',
               borderRadius: 4,
-              paddingHorizontal: bW * 0.010,
-              paddingVertical: bH * 0.006,
-              marginBottom: bH * 0.004,
+              paddingHorizontal: bW * 0.012,
+              paddingVertical: bH * 0.008,
+              marginBottom: bH * 0.006,
             }}>
-              <Text style={{ fontFamily: SANS, fontSize: fIngH, fontWeight: '700', color: '#FFFFFF' }}>
+              <Text style={{ fontFamily: SANS, fontSize: fIngH, fontWeight: '800', color: '#FFFFFF' }}>
                 {ing.title}
               </Text>
             </View>
             {/* Bullet lines */}
             {ing.lines.map((line, j) => (
               <Text key={j} style={{
-                fontFamily: SANS, fontSize: fIngT, fontWeight: '600', color: GRAY,
-                lineHeight: fIngT * 1.4, paddingLeft: bW * 0.010,
-                marginBottom: bH * 0.002,
+                fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: GRAY,
+                lineHeight: fIngT * 1.3, paddingLeft: bW * 0.010,
+                marginBottom: bH * 0.003,
               }}>
                 {'• '}{line}
               </Text>
