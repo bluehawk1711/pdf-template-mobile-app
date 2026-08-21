@@ -193,7 +193,7 @@ export const Page4: React.FC = () => {
   const fRx = bW * 0.02;
   const fTm = bW * 0.016;
   const fComp = bW * 0.015;
-  const fIngT = bW * 0.012;
+  const fIngT = bW * 0.014;
   const fTune = bW * 0.034;
 
   const womanW = bW * 0.34;
@@ -492,9 +492,9 @@ export const Page4: React.FC = () => {
               fontFamily: SANS,
               fontSize: fIngT,
               color: item.pink ? PINK_TEXT : DARK,
-              fontWeight: "600",
+              fontWeight: "800",
               lineHeight: fIngT * 1.8,
-              marginBottom: bH * 0.012,
+              marginBottom: bH * 0.020,
             }}
           >
             {"• "}

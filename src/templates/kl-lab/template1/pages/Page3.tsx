@@ -198,7 +198,7 @@ export const Page3: React.FC = () => {
   const fTag1 = bW * 0.03;
   const fTag2 = bW * 0.034;
 
-  const womanW = bW * 0.32;
+  const womanW = bW * 0.36;
   const womanH = bH * 0.5;
 
   return (
@@ -223,11 +223,11 @@ export const Page3: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.02,
-          top: bT + bH * 0.18,
+          left: bL + bW * 0.10,
+          top: bT + bH * 0.25,
           width: womanW,
           height: womanH,
-          borderRadius: 12,
+          borderRadius: 96,
           overflow: "hidden",
           opacity: womanOp,
           transform: [{ scale: womanSc }],

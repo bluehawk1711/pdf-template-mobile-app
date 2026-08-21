@@ -285,8 +285,8 @@ export const Page2: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.02,
-          top: bT + bH * 0.2,
+          left: bL + bW * 0.0,
+          top: bT + bH * 0.22,
           width: bW * 0.46,
           opacity: l1Op,
           transform: [{ translateY: l1Y }],
@@ -296,6 +296,7 @@ export const Page2: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fLeftMd,
+            fontWeight: "700",
             color: DARK,
             textAlign: "center",
             lineHeight: fLeftMd * 1.4,
@@ -310,7 +311,7 @@ export const Page2: React.FC = () => {
         style={{
           position: "absolute",
           left: bL + bW * 0.02,
-          top: bT + bH * 0.2 + fLeftMd * 1.4,
+          top: bT + bH * 0.21 + fLeftMd * 1.4,
           width: bW * 0.46,
           opacity: l2Op,
           transform: [{ translateY: l2Y }],
@@ -319,7 +320,7 @@ export const Page2: React.FC = () => {
         <Text
           style={{
             fontFamily: SANS,
-            fontSize: fLeftLg,
+            fontSize: fLeftMd,
             fontWeight: "700",
             color: DARK,
             textAlign: "center",
@@ -334,20 +335,22 @@ export const Page2: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.02,
-          top: bT + bH * 0.2 + fLeftMd * 1.4 + fLeftLg * 1.4,
+          left: bL + bW * 0.1,
+          top: bT + bH * 0.21 + fLeftMd * 1.4 + fLeftLg * 1.4,
           width: bW * 0.46,
           opacity: l3Op,
           transform: [{ translateY: l3Y }],
         }}
       >
+        {/* fLeftLg */}
         <Text
           style={{
             fontFamily: SANS,
             fontSize: fLeftMd,
+            fontWeight: "700",
             color: DARK,
             textAlign: "center",
-            lineHeight: fLeftMd * 1.4,
+            lineHeight: fLeftMd * 1,
           }}
         >
           Diabetes and Hypertension...
