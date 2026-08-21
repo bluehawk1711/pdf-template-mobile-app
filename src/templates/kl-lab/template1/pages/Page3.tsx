@@ -9,7 +9,7 @@
  * - page3_main.png: pregnant woman
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -17,54 +17,54 @@ import {
   StyleSheet,
   Animated,
   Platform,
-} from 'react-native';
-import { computeContainLayout } from '../helpers';
-import { useContentDimensions } from '../DimensionsContext';
+} from "react-native";
+import { computeContainLayout } from "../helpers";
+import { useContentDimensions } from "../DimensionsContext";
 
 /* ── assets ───────────────────────────────────────────────────────── */
 
-const BG = require('../../../../../assets/template1/page3_background.png');
-const WOMAN = require('../../../../../assets/template1/page3_main.png');
+const BG = require("../../../../../assets/template1/page3_background.png");
+const WOMAN = require("../../../../../assets/template1/page3_main.png");
 
 /* ── constants ────────────────────────────────────────────────────── */
 
 const BG_W = 1293;
 const BG_H = 816;
 
-const BROWN = '#8B4513';
-const DARK_BROWN_BG = '#8B451A';
-const DARK = '#1A1A1A';
-const GRAY = '#333333';
-const LT_GRAY = '#555555';
+const BROWN = "#8B4513";
+const DARK_BROWN_BG = "#8B451A";
+const DARK = "#1A1A1A";
+const GRAY = "#333333";
+const LT_GRAY = "#555555";
 
-const SANS = Platform.OS === 'ios' ? '-apple-system' : 'Roboto';
-const SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
+const SANS = Platform.OS === "ios" ? "-apple-system" : "Roboto";
+const SERIF = Platform.OS === "ios" ? "Georgia" : "serif";
 
 const INGREDIENTS = [
   {
-    title: 'Calcium Carbonate',
+    title: "Calcium Carbonate",
     lines: [
-      'Plays a critical role in the body, it is essential for normal functioning of nerves, cell, muscle and bones.',
-      'Most important nutrient in reducing risk of osteoporosis',
+      "Plays a critical role in the body, it is essential for normal functioning of nerves, cell, muscle and bones.",
+      "Most important nutrient in reducing risk of osteoporosis",
     ],
   },
   {
-    title: 'Vitamin D3',
-    lines: ['Complete 2000 I.U. Vitamins'],
+    title: "Vitamin D3",
+    lines: ["Complete 2000 I.U. Vitamins"],
   },
   {
-    title: 'Methylcobalamin',
+    title: "Methylcobalamin",
     lines: [
-      'Combined treatment of folate and vitamin B12 is safe calcification by 50% and cardiovascular death risk by 46%.',
+      "Combined treatment of folate and vitamin B12 is safe calcification by 50% and cardiovascular death risk by 46%.",
     ],
   },
   {
-    title: 'L-Methyl Folate',
+    title: "L-Methyl Folate",
     lines: [
-      'Protect against neural tube defects',
-      'Increase fetal skeletal growth',
-      'Reduce the risk of preterm birth',
-      'Reduces risk of miscarriage & low birth',
+      "Protect against neural tube defects",
+      "Increase fetal skeletal growth",
+      "Reduce the risk of preterm birth",
+      "Reduces risk of miscarriage & low birth",
     ],
   },
 ];
@@ -98,26 +98,91 @@ export const Page3: React.FC = () => {
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
-        Animated.timing(titleOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
-        Animated.timing(titleY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
-        Animated.timing(womanOp, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
-        Animated.timing(womanSc, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
-        Animated.timing(brOp, { toValue: 1, duration: 500, delay: 300, useNativeDriver: true }),
-        Animated.timing(brX, { toValue: 0, duration: 500, delay: 300, useNativeDriver: true }),
+        Animated.timing(titleOp, {
+          toValue: 1,
+          duration: 500,
+          delay: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(titleY, {
+          toValue: 0,
+          duration: 500,
+          delay: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(womanOp, {
+          toValue: 1,
+          duration: 600,
+          delay: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(womanSc, {
+          toValue: 1,
+          duration: 600,
+          delay: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(brOp, {
+          toValue: 1,
+          duration: 500,
+          delay: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(brX, {
+          toValue: 0,
+          duration: 500,
+          delay: 300,
+          useNativeDriver: true,
+        }),
       ]),
       Animated.parallel([
-        Animated.timing(cpOp, { toValue: 1, duration: 400, delay: 400, useNativeDriver: true }),
-        Animated.timing(cpY, { toValue: 0, duration: 400, delay: 400, useNativeDriver: true }),
+        Animated.timing(cpOp, {
+          toValue: 1,
+          duration: 400,
+          delay: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cpY, {
+          toValue: 0,
+          duration: 400,
+          delay: 400,
+          useNativeDriver: true,
+        }),
         ...ingOps.map((op, i) =>
-          Animated.timing(op, { toValue: 1, duration: 400, delay: 450 + i * 100, useNativeDriver: true }),
+          Animated.timing(op, {
+            toValue: 1,
+            duration: 400,
+            delay: 450 + i * 100,
+            useNativeDriver: true,
+          }),
         ),
       ]),
       Animated.parallel([
-        Animated.timing(indOp, { toValue: 1, duration: 400, useNativeDriver: true }),
-        Animated.timing(indY, { toValue: 0, duration: 400, useNativeDriver: true }),
+        Animated.timing(indOp, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(indY, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }),
       ]),
     ]).start();
-  }, [titleOp, titleY, womanOp, womanSc, brOp, brX, cpOp, cpY, ingOps, indOp, indY]);
+  }, [
+    titleOp,
+    titleY,
+    womanOp,
+    womanSc,
+    brOp,
+    brX,
+    cpOp,
+    cpY,
+    ingOps,
+    indOp,
+    indY,
+  ]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
   const fTitle1 = bW * 0.026;
@@ -128,20 +193,26 @@ export const Page3: React.FC = () => {
   const fComp = bW * 0.015;
   const fIngH = bW * 0.018;
   const fIngT = bW * 0.014;
-  const fIndT = bW * 0.020;
+  const fIndT = bW * 0.02;
   const fIndX = bW * 0.014;
-  const fTag1 = bW * 0.030;
+  const fTag1 = bW * 0.03;
   const fTag2 = bW * 0.034;
 
   const womanW = bW * 0.32;
-  const womanH = bH * 0.50;
+  const womanH = bH * 0.5;
 
   return (
     <View style={styles.screen}>
       {/* Background */}
       <Image
         source={BG}
-        style={{ position: 'absolute', left: bL, top: bT, width: bW, height: bH }}
+        style={{
+          position: "absolute",
+          left: bL,
+          top: bT,
+          width: bW,
+          height: bH,
+        }}
         resizeMode="contain"
         accessibilityIgnoresInvertColors
       />
@@ -149,68 +220,109 @@ export const Page3: React.FC = () => {
       {/* ═══════════════════ LEFT SIDE ═════════════════════════════ */}
 
       {/* Pregnant woman image — LEFT CENTER */}
-      <Animated.View style={{
-        position: 'absolute',
-        left: bL + bW * 0.02,
-        top: bT + bH * 0.18,
-        width: womanW, height: womanH,
-        borderRadius: 12,
-        overflow: 'hidden',
-        opacity: womanOp,
-        transform: [{ scale: womanSc }],
-      }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.02,
+          top: bT + bH * 0.18,
+          width: womanW,
+          height: womanH,
+          borderRadius: 12,
+          overflow: "hidden",
+          opacity: womanOp,
+          transform: [{ scale: womanSc }],
+        }}
+      >
         <Image
           source={WOMAN}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
           accessibilityIgnoresInvertColors
         />
       </Animated.View>
 
       {/* "In pregnancy & Lactation..." — LEFT TOP */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.02, top: bT + bH * 0.08,
-        opacity: titleOp, transform: [{ translateY: titleY }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fTitle1 * 1.1, fontWeight: '900', color: DARK,
-        }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.02,
+          top: bT + bH * 0.08,
+          opacity: titleOp,
+          transform: [{ translateY: titleY }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SANS,
+            fontSize: fTitle1 * 1.1,
+            fontWeight: "900",
+            color: DARK,
+          }}
+        >
           In pregnancy &
         </Text>
       </Animated.View>
 
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.10, top: bT + bH * 0.08 + fTitle1 * 1.3,
-        opacity: titleOp, transform: [{ translateY: titleY }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fTitle2 * 1.1, fontWeight: '900', color: DARK,
-        }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.1,
+          top: bT + bH * 0.08 + fTitle1 * 1.3,
+          opacity: titleOp,
+          transform: [{ translateY: titleY }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SANS,
+            fontSize: fTitle2 * 1.1,
+            fontWeight: "900",
+            color: DARK,
+          }}
+        >
           Lactation...
         </Text>
       </Animated.View>
 
       {/* "Good for Mom & Good for Child..." — LEFT BOTTOM, after blood cells */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.16,
-        top: bT + bH * 0.80,
-        opacity: titleOp, transform: [{ translateY: titleY }],
-      }}>
-        <Text style={{
-          fontFamily: SERIF, fontSize: fTag1, fontWeight: '900', color: DARK,
-        }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.16,
+          top: bT + bH * 0.8,
+          opacity: titleOp,
+          transform: [{ translateY: titleY }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SERIF,
+            fontSize: fTag1,
+            fontWeight: "900",
+            color: DARK,
+          }}
+        >
           Good for Mom &
         </Text>
       </Animated.View>
 
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.16,
-        top: bT + bH * 0.80 + fTag1 * 1.3,
-        opacity: titleOp, transform: [{ translateY: titleY }],
-      }}>
-        <Text style={{
-          fontFamily: SERIF, fontSize: fTag2, fontWeight: '900', color: DARK,
-        }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.16,
+          top: bT + bH * 0.8 + fTag1 * 1.3,
+          opacity: titleOp,
+          transform: [{ translateY: titleY }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SERIF,
+            fontSize: fTag2,
+            fontWeight: "900",
+            color: DARK,
+          }}
+        >
           Good for Child...
         </Text>
       </Animated.View>
@@ -218,41 +330,84 @@ export const Page3: React.FC = () => {
       {/* ═══════════════════ RIGHT SIDE ════════════════════════════ */}
 
       {/* Rx */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.02,
-        opacity: brOp,
-      }}>
-        <Text style={{ fontFamily: SANS, fontSize: fRx, fontWeight: '700', color: DARK }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.52,
+          top: bT + bH * 0.02,
+          opacity: brOp,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SANS,
+            fontSize: fRx,
+            fontWeight: "700",
+            color: DARK,
+          }}
+        >
           Rx
         </Text>
       </Animated.View>
 
       {/* Quocal-XT */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.05,
-        opacity: brOp, transform: [{ translateX: brX }],
-      }}>
-        <Text style={{ fontFamily: SERIF, fontSize: fBrand, fontWeight: '700', color: BROWN }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.52,
+          top: bT + bH * 0.05,
+          opacity: brOp,
+          transform: [{ translateX: brX }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SERIF,
+            fontSize: fBrand,
+            fontWeight: "700",
+            color: BROWN,
+          }}
+        >
           Quocal-XT
         </Text>
       </Animated.View>
 
       {/* ® */}
-      <Animated.View style={{
-        position: 'absolute', right: screenW - (bL + bW * 0.96),
-        top: bT + bH * 0.02, opacity: brOp,
-      }}>
-        <Text style={{ fontFamily: SANS, fontSize: fTm, color: BROWN }}>{'®'}</Text>
+      <Animated.View
+        style={{
+          position: "absolute",
+          right: screenW - (bL + bW * 0.96),
+          top: bT + bH * 0.02,
+          opacity: brOp,
+        }}
+      >
+        <Text style={{ fontFamily: SANS, fontSize: fTm, color: BROWN }}>
+          {"®"}
+        </Text>
       </Animated.View>
 
       {/* Composition — SEMI BOLD */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.17,
-        right: screenW - (bL + bW * 0.96), opacity: cpOp, transform: [{ translateY: cpY }],
-      }}>
-        <Text style={{ fontFamily: SANS, fontSize: fComp, fontWeight: '600', color: LT_GRAY, lineHeight: fComp * 1.6 }}>
-          Calcium Carbonate 1250 mg + Vitamin D3 2000 IU +{'\n'}
-          Methylcobalamin 1500 mcg + L-Methylfolate 1000 mcg +{'\n'}
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.52,
+          top: bT + bH * 0.17,
+          right: screenW - (bL + bW * 0.96),
+          opacity: cpOp,
+          transform: [{ translateY: cpY }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SANS,
+            fontSize: fComp,
+            fontWeight: "600",
+            color: LT_GRAY,
+            lineHeight: fComp * 1.6,
+          }}
+        >
+          Calcium Carbonate 1250 mg + Vitamin D3 2000 IU +{"\n"}
+          Methylcobalamin 1500 mcg + L-Methylfolate 1000 mcg +{"\n"}
           Pyridoxal-5-Phosphate 20 mg
         </Text>
       </Animated.View>
@@ -261,34 +416,54 @@ export const Page3: React.FC = () => {
       {INGREDIENTS.map((ing, i) => {
         const sectionTop = bT + bH * (0.32 + i * 0.13);
         return (
-          <Animated.View key={ing.title} style={{
-            position: 'absolute',
-            left: bL + bW * 0.52,
-            top: sectionTop,
-            right: screenW - (bL + bW * 0.96),
-            opacity: ingOps[i],
-          }}>
+          <Animated.View
+            key={ing.title}
+            style={{
+              position: "absolute",
+              left: bL + bW * 0.52,
+              top: sectionTop,
+              right: screenW - (bL + bW * 0.96),
+              opacity: ingOps[i],
+            }}
+          >
             {/* Brown header badge */}
-            <View style={{
-              backgroundColor: DARK_BROWN_BG,
-              alignSelf: 'flex-start',
-              borderRadius: 4,
-              paddingHorizontal: bW * 0.012,
-              paddingVertical: bH * 0.008,
-              marginBottom: bH * 0.008,
-            }}>
-              <Text style={{ fontFamily: SANS, fontSize: fIngH, fontWeight: '800', color: '#FFFFFF' }}>
+            <View
+              style={{
+                backgroundColor: DARK_BROWN_BG,
+                alignSelf: "flex-start",
+                borderRadius: 4,
+                paddingHorizontal: bW * 0.012,
+                paddingVertical: bH * 0.008,
+                marginBottom: bH * 0.008,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: SANS,
+                  fontSize: fIngH,
+                  fontWeight: "800",
+                  color: "#FFFFFF",
+                }}
+              >
                 {ing.title}
               </Text>
             </View>
             {/* Bullet lines */}
             {ing.lines.map((line, j) => (
-              <Text key={j} style={{
-                fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: GRAY,
-                lineHeight: fIngT * 1.3, paddingLeft: bW * 0.010,
-                marginBottom: bH * 0.004,
-              }}>
-                {'• '}{line}
+              <Text
+                key={j}
+                style={{
+                  fontFamily: SANS,
+                  fontSize: fIngT,
+                  fontWeight: "700",
+                  color: GRAY,
+                  lineHeight: fIngT * 1.3,
+                  paddingLeft: bW * 0.01,
+                  marginBottom: bH * 0.004,
+                }}
+              >
+                {"• "}
+                {line}
               </Text>
             ))}
           </Animated.View>
@@ -296,20 +471,36 @@ export const Page3: React.FC = () => {
       })}
 
       {/* Indication — RIGHT BOTTOM, shifted more right */}
-      <Animated.View style={{
-        position: 'absolute',
-        left: bL + bW * 0.76,
-        top: bT + bH * 0.86,
-        opacity: indOp, transform: [{ translateY: indY }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fIndT, fontWeight: '700',
-          color: BROWN, marginBottom: bH * 0.006,
-        }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: bL + bW * 0.8,
+          top: bT + bH * 0.8,
+          opacity: indOp,
+          transform: [{ translateY: indY }],
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: SANS,
+            fontSize: fIndT,
+            fontWeight: "700",
+            color: BROWN,
+            marginBottom: bH * 0.006,
+          }}
+        >
           Indication:
         </Text>
-        <Text style={{ fontFamily: SANS, fontSize: fIndX, fontWeight: '600', color: GRAY, lineHeight: fIndX * 1.4 }}>
-          Pregnancy & Lactation{'\n'}Hypoparathyroidism
+        <Text
+          style={{
+            fontFamily: SANS,
+            fontSize: fIndX,
+            fontWeight: "600",
+            color: GRAY,
+            lineHeight: fIndX * 1.4,
+          }}
+        >
+          Pregnancy & Lactation{"\n"}Hypoparathyroidism
         </Text>
       </Animated.View>
     </View>
@@ -319,5 +510,5 @@ export const Page3: React.FC = () => {
 /* ── styles ────────────────────────────────────────────────────────── */
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFFFFF' },
+  screen: { flex: 1, backgroundColor: "#FFFFFF" },
 });
