@@ -1,11 +1,12 @@
 /**
  * Page 3 — "Quocal-XT" pregnancy & lactation product page.
  *
- * Background contains: pregnant woman image, blood cells, decorative waves
- * Overlay: title text, brand name, composition, ingredient sections, indication
+ * Left: pregnant woman image + "Good for Mom & Good for Child..." tagline
+ * Right: brand name, composition, ingredient sections, indication
  *
  * Assets:
  * - page3_background.png: cream/gold/maroon waves + pregnant woman
+ * - page3_main.png: pregnant woman
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -76,7 +77,7 @@ export const Page3: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values — explicit refs, no helper function ────────── */
+  /* ── animation values — explicit refs ────────────────────────────── */
   const titleOp = useRef(new Animated.Value(0)).current;
   const titleY = useRef(new Animated.Value(-15)).current;
   const womanOp = useRef(new Animated.Value(0)).current;
@@ -105,10 +106,10 @@ export const Page3: React.FC = () => {
         Animated.timing(brX, { toValue: 0, duration: 500, delay: 300, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(cpOp, { toValue: 1, duration: 400, delay: 300, useNativeDriver: true }),
-        Animated.timing(cpY, { toValue: 0, duration: 400, delay: 300, useNativeDriver: true }),
+        Animated.timing(cpOp, { toValue: 1, duration: 400, delay: 400, useNativeDriver: true }),
+        Animated.timing(cpY, { toValue: 0, duration: 400, delay: 400, useNativeDriver: true }),
         ...ingOps.map((op, i) =>
-          Animated.timing(op, { toValue: 1, duration: 400, delay: 350 + i * 80, useNativeDriver: true }),
+          Animated.timing(op, { toValue: 1, duration: 400, delay: 450 + i * 100, useNativeDriver: true }),
         ),
       ]),
       Animated.parallel([
@@ -124,13 +125,16 @@ export const Page3: React.FC = () => {
   const fBrand = bW * 0.058;
   const fRx = bW * 0.018;
   const fTm = bW * 0.014;
-  const fComp = bW * 0.014;
+  const fComp = bW * 0.015;
   const fIngH = bW * 0.018;
   const fIngT = bW * 0.014;
-  const fIndT = bW * 0.018;
-  const fIndX = bW * 0.013;
-  const fTag1 = bW * 0.028;
-  const fTag2 = bW * 0.032;
+  const fIndT = bW * 0.020;
+  const fIndX = bW * 0.014;
+  const fTag1 = bW * 0.030;
+  const fTag2 = bW * 0.034;
+
+  const womanW = bW * 0.32;
+  const womanH = bH * 0.50;
 
   return (
     <View style={styles.screen}>
@@ -149,8 +153,7 @@ export const Page3: React.FC = () => {
         position: 'absolute',
         left: bL + bW * 0.02,
         top: bT + bH * 0.18,
-        width: bW * 0.34,
-        height: bH * 0.55,
+        width: womanW, height: womanH,
         borderRadius: 12,
         overflow: 'hidden',
         opacity: womanOp,
@@ -164,7 +167,7 @@ export const Page3: React.FC = () => {
         />
       </Animated.View>
 
-      {/* "In pregnancy & Lactation..." — LEFT, pushed down, bolder bigger */}
+      {/* "In pregnancy & Lactation..." — LEFT TOP */}
       <Animated.View style={{
         position: 'absolute', left: bL + bW * 0.02, top: bT + bH * 0.08,
         opacity: titleOp, transform: [{ translateY: titleY }],
@@ -189,8 +192,8 @@ export const Page3: React.FC = () => {
 
       {/* "Good for Mom & Good for Child..." — LEFT BOTTOM, after blood cells */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.14,
-        top: bT + bH * 0.78,
+        position: 'absolute', left: bL + bW * 0.16,
+        top: bT + bH * 0.80,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
@@ -201,8 +204,8 @@ export const Page3: React.FC = () => {
       </Animated.View>
 
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.14,
-        top: bT + bH * 0.78 + fTag1 * 1.3,
+        position: 'absolute', left: bL + bW * 0.16,
+        top: bT + bH * 0.80 + fTag1 * 1.3,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
@@ -242,9 +245,9 @@ export const Page3: React.FC = () => {
         <Text style={{ fontFamily: SANS, fontSize: fTm, color: BROWN }}>{'®'}</Text>
       </Animated.View>
 
-      {/* Composition */}
+      {/* Composition — SEMI BOLD */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.16,
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.17,
         right: screenW - (bL + bW * 0.96), opacity: cpOp, transform: [{ translateY: cpY }],
       }}>
         <Text style={{ fontFamily: SANS, fontSize: fComp, fontWeight: '600', color: LT_GRAY, lineHeight: fComp * 1.6 }}>
@@ -256,7 +259,7 @@ export const Page3: React.FC = () => {
 
       {/* Ingredient sections — bigger, bolder, proper spacing */}
       {INGREDIENTS.map((ing, i) => {
-        const sectionTop = bT + bH * (0.28 + i * 0.14);
+        const sectionTop = bT + bH * (0.32 + i * 0.13);
         return (
           <Animated.View key={ing.title} style={{
             position: 'absolute',
@@ -272,7 +275,7 @@ export const Page3: React.FC = () => {
               borderRadius: 4,
               paddingHorizontal: bW * 0.012,
               paddingVertical: bH * 0.008,
-              marginBottom: bH * 0.006,
+              marginBottom: bH * 0.008,
             }}>
               <Text style={{ fontFamily: SANS, fontSize: fIngH, fontWeight: '800', color: '#FFFFFF' }}>
                 {ing.title}
@@ -283,7 +286,7 @@ export const Page3: React.FC = () => {
               <Text key={j} style={{
                 fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: GRAY,
                 lineHeight: fIngT * 1.3, paddingLeft: bW * 0.010,
-                marginBottom: bH * 0.003,
+                marginBottom: bH * 0.004,
               }}>
                 {'• '}{line}
               </Text>
@@ -292,16 +295,16 @@ export const Page3: React.FC = () => {
         );
       })}
 
-      {/* Indication — bottom right */}
+      {/* Indication — RIGHT BOTTOM */}
       <Animated.View style={{
         position: 'absolute',
         left: bL + bW * 0.70,
-        top: bT + bH * 0.82,
+        top: bT + bH * 0.86,
         opacity: indOp, transform: [{ translateY: indY }],
       }}>
         <Text style={{
           fontFamily: SANS, fontSize: fIndT, fontWeight: '700',
-          color: BROWN, marginBottom: bH * 0.004,
+          color: BROWN, marginBottom: bH * 0.006,
         }}>
           Indication:
         </Text>
