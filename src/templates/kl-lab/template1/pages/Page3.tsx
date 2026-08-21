@@ -6,7 +6,6 @@
  *
  * Assets:
  * - page3_background.png: cream/gold/maroon waves + pregnant woman
- * - page3_main.png: pregnant woman (not used - in background)
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -76,14 +75,21 @@ export const Page3: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values ────────────────────────────────────────────── */
-  const mk = (v = 0) => useRef(new Animated.Value(v)).current;
+  /* ── animation values — explicit refs, no helper function ────────── */
+  const titleOp = useRef(new Animated.Value(0)).current;
+  const titleY = useRef(new Animated.Value(-15)).current;
+  const brOp = useRef(new Animated.Value(0)).current;
+  const brX = useRef(new Animated.Value(30)).current;
+  const cpOp = useRef(new Animated.Value(0)).current;
+  const cpY = useRef(new Animated.Value(10)).current;
+  const ingOp0 = useRef(new Animated.Value(0)).current;
+  const ingOp1 = useRef(new Animated.Value(0)).current;
+  const ingOp2 = useRef(new Animated.Value(0)).current;
+  const ingOp3 = useRef(new Animated.Value(0)).current;
+  const indOp = useRef(new Animated.Value(0)).current;
+  const indY = useRef(new Animated.Value(10)).current;
 
-  const titleOp = mk(); const titleY = mk(-15);
-  const brOp = mk(); const brX = mk(30);
-  const cpOp = mk(); const cpY = mk(10);
-  const ingOps = useRef(INGREDIENTS.map(() => new Animated.Value(0))).current;
-  const indOp = mk(); const indY = mk(10);
+  const ingOps = [ingOp0, ingOp1, ingOp2, ingOp3];
 
   useEffect(() => {
     Animated.sequence([
