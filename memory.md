@@ -135,8 +135,8 @@ These are binding working agreements — see `plan.md` for the full spec:
 | 7 | **`any` usage** | `ServicesScreen` uses `value: any` + `@ts-ignore`; spec bans both (§25). |
 | 8 | ✅ **Resolved** | `node_modules` installed; `npx tsc --noEmit` works. | |
 | 9 | **⚠️ Import path convention for `pages/` subdirectory** | Files inside `src/templates/kl-lab/template1/pages/` need **5 levels** of `../` to reach the project root: `require('../../../../../assets/template1/...')`. Files directly in `template1/` only need 4. Getting this wrong causes Metro "Unable to resolve" bundler errors at runtime (not caught by tsc). Always double-check require paths when creating new page components. |
-| 10 | **🔒 Pages 1, 4, 7, 8 — COMPLETE, DO NOT MODIFY** | These pages are finalized and perfect in design. Do not modify, refactor, or touch them unless explicitly asked by the user. Any changes to these pages require explicit user permission. |
-| 11 | **📄 Pages 2, 3, 5, 6, 9 — Working status** | These pages are functional but may need further polish. Page 2: ingredient text layout may need tweaking. Page 3: tagline moved to right, title enlarged. Page 5: heading removed (user will add to background). Page 6: heading removed, dark orange theme. Page 9: back cover with smiley and address. |
+| 10 | **🔒 Pages 1, 3, 4, 7, 8 — COMPLETE, DO NOT MODIFY** | These pages are finalized and perfect in design. Do not modify, refactor, or touch them unless explicitly asked by the user. Any changes to these pages require explicit user permission. |
+| 11 | **📄 Pages 2, 5, 6, 9 — Working status** | These pages are functional but may need further polish. Page 2: ingredient text layout may need tweaking. Page 5: heading removed (user will add to background). Page 6: heading removed, dark orange theme. Page 9: back cover with smiley and address. |
 
 ---
 

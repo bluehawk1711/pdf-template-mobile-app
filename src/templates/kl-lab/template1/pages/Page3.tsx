@@ -295,10 +295,10 @@ export const Page3: React.FC = () => {
         );
       })}
 
-      {/* Indication — RIGHT BOTTOM */}
+      {/* Indication — RIGHT BOTTOM, shifted more right */}
       <Animated.View style={{
         position: 'absolute',
-        left: bL + bW * 0.70,
+        left: bL + bW * 0.76,
         top: bT + bH * 0.86,
         opacity: indOp, transform: [{ translateY: indY }],
       }}>
