@@ -116,8 +116,8 @@ export const Page2: React.FC = () => {
   const fComp = bW * 0.012;
   const fIndT = bW * 0.016;
   const fBadge = bW * 0.012;
-  const fIngT = bW * 0.013;
-  const fIngX = bW * 0.011;
+  const fIngT = bW * 0.016;
+  const fIngX = bW * 0.012;
   const fTag = bW * 0.028;
   const fPrice = bW * 0.018;
 
@@ -285,51 +285,51 @@ export const Page2: React.FC = () => {
         ))}
       </View>
 
-      {/* Ingredients — two columns, grid layout */}
+      {/* Ingredients — two columns, compact grid */}
       <Animated.View style={{
         position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.54,
-        right: screenW - (bL + bW * 0.96), flexDirection: 'row', gap: bW * 0.02,
+        right: screenW - (bL + bW * 0.96), flexDirection: 'row', gap: bW * 0.015,
         opacity: ingOp,
       }}>
         {/* Col 1 */}
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: 4 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: bH * 0.006 }}>
             Vitamin K2-7:
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7, marginBottom: 12 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4, marginBottom: bH * 0.008 }}>
             Vitamin K2-7 is the active isomer of vitamin K2 and has the highest bioavailability and longest
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7, marginBottom: 12 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4, marginBottom: bH * 0.008 }}>
             K2-7 Increases collagen production through osteoblastic cell
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7, marginBottom: 14 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4, marginBottom: bH * 0.010 }}>
             Activates the Matrix GLA Protein (MGP) Which prevent calcium deposits in the arteries and helps build calcium into healthy bone matrix via carboxylated osteocalcin.
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: 4 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: bH * 0.006 }}>
             Methylcobalamin:
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4 }}>
             Combined treatment of folate and vitamin B12 is safe calcification by 50% and cardiovascular death risk by 46%
           </Text>
         </View>
         {/* Col 2 */}
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: 4 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: bH * 0.006 }}>
             Calcium Carbonate:
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7, marginBottom: 14 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4, marginBottom: bH * 0.010 }}>
             Plays a critical role in the body{'\n'}It is essential for normal functioning of nerves, cell, muscle and bones.{'\n\n'}Most important nutrient in reducing risk of osteoporosis
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: 4 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: bH * 0.006 }}>
             Calcitriol (Active form of vitamin D3):
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7, marginBottom: 14 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4, marginBottom: bH * 0.010 }}>
             Reduces risk of vertebral and hip fractures in postmenopausal women
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: 4 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngT, fontWeight: '700', color: PINK, marginBottom: bH * 0.006 }}>
             L-Methyl Folate
           </Text>
-          <Text style={{ fontFamily: SANS, fontSize: fIngX, color: LT_GRAY, lineHeight: fIngX * 1.7 }}>
+          <Text style={{ fontFamily: SANS, fontSize: fIngX, fontWeight: '600', color: LT_GRAY, lineHeight: fIngX * 1.4 }}>
             Protect against natural defects
           </Text>
         </View>
@@ -338,7 +338,7 @@ export const Page2: React.FC = () => {
       {/* Price — bottom right */}
       <Animated.View style={{
         position: 'absolute', right: screenW - (bL + bW * 0.94),
-        top: bT + bH * 0.90, opacity: prOp,
+        top: bT + bH * 0.88, opacity: prOp,
         transform: [{ translateY: prY }],
       }}>
         <Text style={{ fontFamily: SANS, fontSize: fPrice, fontWeight: '700', color: DARK }}>
