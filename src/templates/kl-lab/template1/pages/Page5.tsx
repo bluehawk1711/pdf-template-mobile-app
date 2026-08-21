@@ -99,17 +99,17 @@ export const Page5: React.FC = () => {
 
   /* ── font sizes ──────────────────────────────────────────────────── */
 
-  const fTitle = bW * 0.026;
-  const fBrand = bW * 0.035;
-  const fSub = bW * 0.012;
-  const fBullet = bW * 0.010;
-  const fIndT = bW * 0.026;
-  const fIndX = bW * 0.010;
-  const fTag = bW * 0.040;
-  const fCode = bW * 0.010;
+  const fTitle = bW * 0.028;
+  const fBrand = bW * 0.038;
+  const fSub = bW * 0.014;
+  const fBullet = bW * 0.012;
+  const fIndT = bW * 0.024;
+  const fIndX = bW * 0.011;
+  const fTag = bW * 0.044;
+  const fCode = bW * 0.011;
 
-  const dartsW = bW * 0.30;
-  const dartsH = bH * 0.60;
+  const dartsW = bW * 0.28;
+  const dartsH = bH * 0.55;
 
   return (
     <View style={styles.screen}>
@@ -125,8 +125,8 @@ export const Page5: React.FC = () => {
 
       {/* "In RTI, UTI & SSTI" */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03, top: bT + bH * 0.06,
-        width: bW * 0.44, opacity: titleOp, transform: [{ translateY: titleY }],
+        position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.08,
+        width: bW * 0.38, opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
           fontFamily: SANS, fontSize: fTitle, fontWeight: '700',
@@ -139,7 +139,7 @@ export const Page5: React.FC = () => {
       {/* Dartboard image */}
       <Animated.View style={{
         position: 'absolute',
-        left: bL + bW * 0.02,
+        left: bL + bW * 0.06,
         top: bT + bH * 0.22,
         width: dartsW, height: dartsH,
         borderRadius: 12,
@@ -159,9 +159,9 @@ export const Page5: React.FC = () => {
 
       {/* MUKOCEF-200 mg — red bracket badge */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.42, top: bT + bH * 0.04,
+        position: 'absolute', left: bL + bW * 0.44, top: bT + bH * 0.06,
         backgroundColor: RED, borderRadius: 6,
-        paddingHorizontal: bW * 0.020, paddingVertical: bH * 0.012,
+        paddingHorizontal: bW * 0.022, paddingVertical: bH * 0.014,
         opacity: brOp, transform: [{ translateX: brX }],
       }}>
         <Text style={{ fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: '#FFFFFF' }}>
@@ -171,23 +171,23 @@ export const Page5: React.FC = () => {
 
       {/* Cefpodoxime Proxetil 200 mg Tablets */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.42, top: bT + bH * 0.18,
-        right: screenW - (bL + bW * 0.96), opacity: subOp, transform: [{ translateY: subY }],
+        position: 'absolute', left: bL + bW * 0.44, top: bT + bH * 0.20,
+        right: screenW - (bL + bW * 0.92), opacity: subOp, transform: [{ translateY: subY }],
       }}>
-        <Text style={{ fontFamily: SANS, fontSize: fSub, color: DARK }}>
+        <Text style={{ fontFamily: SANS, fontSize: fSub, fontWeight: '600', color: DARK }}>
           Cefpodoxime Proxetil 200 mg Tablets
         </Text>
       </Animated.View>
 
       {/* Bullet points */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.42, top: bT + bH * 0.26,
-        right: screenW - (bL + bW * 0.96), opacity: bulOp,
+        position: 'absolute', left: bL + bW * 0.44, top: bT + bH * 0.28,
+        right: screenW - (bL + bW * 0.92), opacity: bulOp,
       }}>
         {BULLET_POINTS.map((bp, i) => (
           <Text key={i} style={{
-            fontFamily: SANS, fontSize: fBullet, color: GRAY,
-            lineHeight: fBullet * 1.7, marginBottom: bH * 0.010,
+            fontFamily: SANS, fontSize: fBullet, fontWeight: '600', color: GRAY,
+            lineHeight: fBullet * 1.6, marginBottom: bH * 0.008,
           }}>
             {'• '}{bp}
           </Text>
@@ -196,19 +196,19 @@ export const Page5: React.FC = () => {
 
       {/* Indications: */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.42, top: bT + bH * 0.46,
-        right: screenW - (bL + bW * 0.96), opacity: indOp,
+        position: 'absolute', left: bL + bW * 0.44, top: bT + bH * 0.48,
+        right: screenW - (bL + bW * 0.92), opacity: indOp,
       }}>
         <Text style={{
           fontFamily: SANS, fontSize: fIndT, fontWeight: '700',
-          color: DARK, marginBottom: bH * 0.015,
+          color: DARK, marginBottom: bH * 0.012,
         }}>
           Indications:
         </Text>
         {INDICATIONS.map((ind, i) => (
           <Text key={i} style={{
-            fontFamily: SANS, fontSize: fIndX, color: GRAY,
-            lineHeight: fIndX * 1.7, marginBottom: bH * 0.006,
+            fontFamily: SANS, fontSize: fIndX, fontWeight: '600', color: GRAY,
+            lineHeight: fIndX * 1.6, marginBottom: bH * 0.004,
           }}>
             {'• '}{ind}
           </Text>
@@ -217,8 +217,8 @@ export const Page5: React.FC = () => {
 
       {/* "Strike-the Right Target" */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03,
-        top: bT + bH * 0.88,
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.85,
         opacity: tagOp, transform: [{ translateY: tagY }],
       }}>
         <Text style={{
@@ -231,10 +231,10 @@ export const Page5: React.FC = () => {
 
       {/* QSP code — bottom right */}
       <View style={{
-        position: 'absolute', right: screenW - (bL + bW * 0.96),
-        top: bT + bH * 0.93,
+        position: 'absolute', right: screenW - (bL + bW * 0.92),
+        top: bT + bH * 0.92,
       }}>
-        <Text style={{ fontFamily: SANS, fontSize: fCode, color: LT_GRAY }}>
+        <Text style={{ fontFamily: SANS, fontSize: fCode, fontWeight: '600', color: LT_GRAY }}>
           QSP
         </Text>
       </View>
