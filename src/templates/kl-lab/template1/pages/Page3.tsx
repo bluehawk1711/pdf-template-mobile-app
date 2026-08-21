@@ -1,12 +1,12 @@
 /**
  * Page 3 — "Quocal-XT" pregnancy & lactation product page.
  *
- * Left:  "In pregnancy & Lactation..." (black, bold) + pregnant woman + tagline
- * Right: Brand name, composition, ingredient badges (dark brown-orange), Indication at bottom-right
+ * Background contains: pregnant woman image, blood cells, decorative waves
+ * Overlay: title text, brand name, composition, ingredient sections, indication
  *
  * Assets:
- * - page3_background.png: cream/gold/maroon decorative waves
- * - page3_main.png: pregnant woman on dark navy
+ * - page3_background.png: cream/gold/maroon waves + pregnant woman
+ * - page3_main.png: pregnant woman (not used - in background)
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -24,7 +24,6 @@ import { useContentDimensions } from '../DimensionsContext';
 /* ── assets ───────────────────────────────────────────────────────── */
 
 const BG = require('../../../../../assets/template1/page3_background.png');
-const WOMAN = require('../../../../../assets/template1/page3_main.png');
 
 /* ── constants ────────────────────────────────────────────────────── */
 
@@ -33,7 +32,6 @@ const BG_H = 816;
 
 const BROWN = '#8B4513';
 const DARK_BROWN_BG = '#8B451A';
-const ORANGE = '#D2691E';
 const DARK = '#1A1A1A';
 const GRAY = '#333333';
 const LT_GRAY = '#555555';
@@ -81,60 +79,47 @@ export const Page3: React.FC = () => {
   /* ── animation values ────────────────────────────────────────────── */
   const mk = (v = 0) => useRef(new Animated.Value(v)).current;
 
-  const titleOp = mk(); const titleY = mk(-20);
-  const womanOp = mk(); const womanSc = mk(0.7);
-  const tagOp = mk(); const tagY = mk(20);
-  const rxOp = mk();
-  const brOp = mk(); const brX = mk(40);
-  const tmOp = mk();
-  const cpOp = mk(); const cpY = mk(15);
+  const titleOp = mk(); const titleY = mk(-15);
+  const brOp = mk(); const brX = mk(30);
+  const cpOp = mk(); const cpY = mk(10);
   const ingOps = useRef(INGREDIENTS.map(() => new Animated.Value(0))).current;
-  const indOp = mk(); const indY = mk(15);
+  const indOp = mk(); const indY = mk(10);
 
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
-        Animated.timing(titleOp, { toValue: 1, duration: 600, delay: 100, useNativeDriver: true }),
-        Animated.timing(titleY, { toValue: 0, duration: 600, delay: 100, useNativeDriver: true }),
-        Animated.timing(rxOp, { toValue: 1, duration: 400, delay: 50, useNativeDriver: true }),
-        Animated.timing(brOp, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
-        Animated.timing(brX, { toValue: 0, duration: 600, delay: 200, useNativeDriver: true }),
-        Animated.timing(tmOp, { toValue: 1, duration: 400, delay: 250, useNativeDriver: true }),
+        Animated.timing(titleOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(titleY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(brOp, { toValue: 1, duration: 500, delay: 200, useNativeDriver: true }),
+        Animated.timing(brX, { toValue: 0, duration: 500, delay: 200, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(womanOp, { toValue: 1, duration: 600, useNativeDriver: true }),
-        Animated.timing(womanSc, { toValue: 1, duration: 600, useNativeDriver: true }),
-        Animated.timing(cpOp, { toValue: 1, duration: 500, delay: 50, useNativeDriver: true }),
-        Animated.timing(cpY, { toValue: 0, duration: 500, delay: 50, useNativeDriver: true }),
+        Animated.timing(cpOp, { toValue: 1, duration: 400, delay: 300, useNativeDriver: true }),
+        Animated.timing(cpY, { toValue: 0, duration: 400, delay: 300, useNativeDriver: true }),
         ...ingOps.map((op, i) =>
-          Animated.timing(op, { toValue: 1, duration: 500, delay: i * 100, useNativeDriver: true }),
+          Animated.timing(op, { toValue: 1, duration: 400, delay: 350 + i * 80, useNativeDriver: true }),
         ),
       ]),
       Animated.parallel([
-        Animated.timing(tagOp, { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(tagY, { toValue: 0, duration: 500, useNativeDriver: true }),
-        Animated.timing(indOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
-        Animated.timing(indY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(indOp, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.timing(indY, { toValue: 0, duration: 400, useNativeDriver: true }),
       ]),
     ]).start();
-  }, [titleOp, titleY, womanOp, womanSc, tagOp, tagY, rxOp, brOp, brX, tmOp, cpOp, cpY, ingOps, indOp, indY]);
+  }, [titleOp, titleY, brOp, brX, cpOp, cpY, ingOps, indOp, indY]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
-  const fTitle1 = bW * 0.028;
-  const fTitle2 = bW * 0.036;
-  const fBrand = bW * 0.062;
-  const fRx = bW * 0.020;
-  const fTm = bW * 0.016;
-  const fComp = bW * 0.012;
-  const fIngH = bW * 0.014;
-  const fIngT = bW * 0.011;
-  const fTag1 = bW * 0.026;
-  const fTag2 = bW * 0.030;
+  const fTitle1 = bW * 0.026;
+  const fTitle2 = bW * 0.034;
+  const fBrand = bW * 0.058;
+  const fRx = bW * 0.018;
+  const fTm = bW * 0.014;
+  const fComp = bW * 0.013;
+  const fIngH = bW * 0.015;
+  const fIngT = bW * 0.012;
   const fIndT = bW * 0.018;
   const fIndX = bW * 0.013;
-
-  const womanW = bW * 0.34;
-  const womanH = bH * 0.58;
+  const fTag1 = bW * 0.028;
+  const fTag2 = bW * 0.032;
 
   return (
     <View style={styles.screen}>
@@ -146,9 +131,9 @@ export const Page3: React.FC = () => {
         accessibilityIgnoresInvertColors
       />
 
-      {/* ═══════════════════ LEFT HALF ═════════════════════════════ */}
+      {/* ═══════════════════ LEFT SIDE ═════════════════════════════ */}
 
-      {/* "In pregnancy &" — BLACK, bold */}
+      {/* "In pregnancy & Lactation..." — LEFT TOP */}
       <Animated.View style={{
         position: 'absolute', left: bL + bW * 0.02, top: bT + bH * 0.04,
         opacity: titleOp, transform: [{ translateY: titleY }],
@@ -160,9 +145,8 @@ export const Page3: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* "Lactation..." — BLACK, bold, indented right */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.10, top: bT + bH * 0.04 + fTitle1 * 1.3,
+        position: 'absolute', left: bL + bW * 0.10, top: bT + bH * 0.04 + fTitle1 * 1.2,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
@@ -172,30 +156,11 @@ export const Page3: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* Pregnant woman image */}
+      {/* "Good for Mom & Good for Child..." — LEFT BOTTOM */}
       <Animated.View style={{
-        position: 'absolute',
-        left: bL + bW * 0.04,
-        top: bT + bH * 0.20,
-        width: womanW, height: womanH,
-        borderRadius: 12,
-        overflow: 'hidden',
-        opacity: womanOp,
-        transform: [{ scale: womanSc }],
-      }}>
-        <Image
-          source={WOMAN}
-          style={{ width: '100%', height: '100%' }}
-          resizeMode="cover"
-          accessibilityIgnoresInvertColors
-        />
-      </Animated.View>
-
-      {/* "Good for Mom &" — shifted right, dark */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.08,
-        top: bT + bH * 0.80,
-        opacity: tagOp, transform: [{ translateY: tagY }],
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.78,
+        opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
           fontFamily: SERIF, fontSize: fTag1, fontWeight: '900', color: DARK,
@@ -204,11 +169,10 @@ export const Page3: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* "Good for Child..." — centered below */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.08,
-        top: bT + bH * 0.80 + fTag1 * 1.4,
-        opacity: tagOp, transform: [{ translateY: tagY }],
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.78 + fTag1 * 1.3,
+        opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
           fontFamily: SERIF, fontSize: fTag2, fontWeight: '900', color: DARK,
@@ -217,12 +181,12 @@ export const Page3: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* ═══════════════════ RIGHT HALF ════════════════════════════ */}
+      {/* ═══════════════════ RIGHT SIDE ════════════════════════════ */}
 
       {/* Rx */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.03,
-        opacity: rxOp,
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.02,
+        opacity: brOp,
       }}>
         <Text style={{ fontFamily: SANS, fontSize: fRx, fontWeight: '700', color: DARK }}>
           Rx
@@ -231,7 +195,7 @@ export const Page3: React.FC = () => {
 
       {/* Quocal-XT */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.06,
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.05,
         opacity: brOp, transform: [{ translateX: brX }],
       }}>
         <Text style={{ fontFamily: SERIF, fontSize: fBrand, fontWeight: '700', color: BROWN }}>
@@ -242,26 +206,26 @@ export const Page3: React.FC = () => {
       {/* ® */}
       <Animated.View style={{
         position: 'absolute', right: screenW - (bL + bW * 0.96),
-        top: bT + bH * 0.02, opacity: tmOp,
+        top: bT + bH * 0.02, opacity: brOp,
       }}>
         <Text style={{ fontFamily: SANS, fontSize: fTm, color: BROWN }}>{'®'}</Text>
       </Animated.View>
 
       {/* Composition */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.18,
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.16,
         right: screenW - (bL + bW * 0.96), opacity: cpOp, transform: [{ translateY: cpY }],
       }}>
-        <Text style={{ fontFamily: SANS, fontSize: fComp, color: LT_GRAY, lineHeight: fComp * 1.8 }}>
+        <Text style={{ fontFamily: SANS, fontSize: fComp, fontWeight: '600', color: LT_GRAY, lineHeight: fComp * 1.6 }}>
           Calcium Carbonate 1250 mg + Vitamin D3 2000 IU +{'\n'}
           Methylcobalamin 1500 mcg + L-Methylfolate 1000 mcg +{'\n'}
           Pyridoxal-5-Phosphate 20 mg
         </Text>
       </Animated.View>
 
-      {/* Ingredient sections — dark brown-orange badges */}
+      {/* Ingredient sections — COMPACT, no overlap */}
       {INGREDIENTS.map((ing, i) => {
-        const sectionTop = bT + bH * (0.32 + i * 0.13);
+        const sectionTop = bT + bH * (0.30 + i * 0.12);
         return (
           <Animated.View key={ing.title} style={{
             position: 'absolute',
@@ -270,14 +234,14 @@ export const Page3: React.FC = () => {
             right: screenW - (bL + bW * 0.96),
             opacity: ingOps[i],
           }}>
-            {/* Dark brown-orange header badge */}
+            {/* Brown header badge */}
             <View style={{
               backgroundColor: DARK_BROWN_BG,
               alignSelf: 'flex-start',
               borderRadius: 4,
-              paddingHorizontal: bW * 0.012,
-              paddingVertical: bH * 0.008,
-              marginBottom: bH * 0.006,
+              paddingHorizontal: bW * 0.010,
+              paddingVertical: bH * 0.006,
+              marginBottom: bH * 0.004,
             }}>
               <Text style={{ fontFamily: SANS, fontSize: fIngH, fontWeight: '700', color: '#FFFFFF' }}>
                 {ing.title}
@@ -286,9 +250,9 @@ export const Page3: React.FC = () => {
             {/* Bullet lines */}
             {ing.lines.map((line, j) => (
               <Text key={j} style={{
-                fontFamily: SANS, fontSize: fIngT, color: GRAY,
-                lineHeight: fIngT * 1.6, paddingLeft: bW * 0.012,
-                marginBottom: bH * 0.004,
+                fontFamily: SANS, fontSize: fIngT, fontWeight: '600', color: GRAY,
+                lineHeight: fIngT * 1.4, paddingLeft: bW * 0.010,
+                marginBottom: bH * 0.002,
               }}>
                 {'• '}{line}
               </Text>
@@ -297,20 +261,20 @@ export const Page3: React.FC = () => {
         );
       })}
 
-      {/* Indication — bottom right, after L-Methyl Folate section */}
+      {/* Indication — bottom right */}
       <Animated.View style={{
         position: 'absolute',
-        left: bL + bW * 0.72,
-        top: bT + bH * 0.80,
+        left: bL + bW * 0.70,
+        top: bT + bH * 0.82,
         opacity: indOp, transform: [{ translateY: indY }],
       }}>
         <Text style={{
           fontFamily: SANS, fontSize: fIndT, fontWeight: '700',
-          color: BROWN, marginBottom: bH * 0.006,
+          color: BROWN, marginBottom: bH * 0.004,
         }}>
           Indication:
         </Text>
-        <Text style={{ fontFamily: SANS, fontSize: fIndX, color: GRAY, lineHeight: fIndX * 1.5 }}>
+        <Text style={{ fontFamily: SANS, fontSize: fIndX, fontWeight: '600', color: GRAY, lineHeight: fIndX * 1.4 }}>
           Pregnancy & Lactation{'\n'}Hypoparathyroidism
         </Text>
       </Animated.View>
