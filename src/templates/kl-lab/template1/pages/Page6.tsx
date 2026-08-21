@@ -1,8 +1,8 @@
 /**
  * Page 6 — "MUKOCEF-O" combination product page.
  *
- * Background already contains: red diagonal stripes, some decorative elements
- * Overlay: infection text, brand name, composition, chess image, badges, taglines
+ * Left side: infection text, chess image, "Choose The Winning Combination", "SURE TO SUCCESS"
+ * Right side: brand name, composition, badges, product codes
  *
  * Assets:
  * - page6_background.png: red stripes + white center (16:9 landscape)
@@ -59,7 +59,7 @@ export const Page6: React.FC = () => {
   const mk = (v = 0) => useRef(new Animated.Value(v)).current;
 
   const infOp = mk(); const infY = mk(-15);
-  const brOp = mk(); const brX = mk(-30);
+  const brOp = mk(); const brX = mk(30);
   const cpOp = mk(); const cpY = mk(10);
   const chessOp = mk(); const chessSc = mk(0.7);
   const badgesOp = mk(); const badgesX = mk(30);
@@ -72,10 +72,10 @@ export const Page6: React.FC = () => {
       Animated.parallel([
         Animated.timing(infOp, { toValue: 1, duration: 600, delay: 100, useNativeDriver: true }),
         Animated.timing(infY, { toValue: 0, duration: 600, delay: 100, useNativeDriver: true }),
-        Animated.timing(brOp, { toValue: 1, duration: 600, delay: 300, useNativeDriver: true }),
-        Animated.timing(brX, { toValue: 0, duration: 600, delay: 300, useNativeDriver: true }),
-        Animated.timing(cpOp, { toValue: 1, duration: 500, delay: 400, useNativeDriver: true }),
-        Animated.timing(cpY, { toValue: 0, duration: 500, delay: 400, useNativeDriver: true }),
+        Animated.timing(brOp, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(brX, { toValue: 0, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(cpOp, { toValue: 1, duration: 500, delay: 300, useNativeDriver: true }),
+        Animated.timing(cpY, { toValue: 0, duration: 500, delay: 300, useNativeDriver: true }),
       ]),
       Animated.parallel([
         Animated.timing(chessOp, { toValue: 1, duration: 600, useNativeDriver: true }),
@@ -95,16 +95,16 @@ export const Page6: React.FC = () => {
   }, [infOp, infY, brOp, brX, cpOp, cpY, chessOp, chessSc, badgesOp, badgesX, tagOp, tagY, sureOp, codeOps]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
-  const fInf = bW * 0.020;
-  const fBrand = bW * 0.050;
-  const fComp = bW * 0.016;
-  const fBadge = bW * 0.014;
-  const fTag = bW * 0.034;
-  const fSure = bW * 0.022;
-  const fCode = bW * 0.014;
+  const fInf = bW * 0.022;
+  const fBrand = bW * 0.052;
+  const fComp = bW * 0.018;
+  const fBadge = bW * 0.016;
+  const fTag = bW * 0.036;
+  const fSure = bW * 0.024;
+  const fCode = bW * 0.016;
 
-  const chessW = bW * 0.26;
-  const chessH = bH * 0.45;
+  const chessW = bW * 0.28;
+  const chessH = bH * 0.40;
 
   return (
     <View style={styles.screen}>
@@ -116,50 +116,26 @@ export const Page6: React.FC = () => {
         accessibilityIgnoresInvertColors
       />
 
-      {/* ═══════════════════ TOP LEFT ═════════════════════════════ */}
+      {/* ═══════════════════ LEFT SIDE ═════════════════════════════ */}
 
-      {/* Infection text */}
+      {/* Infection text — LEFT */}
       <Animated.View style={{
         position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.06,
-        width: bW * 0.45, opacity: infOp, transform: [{ translateY: infY }],
+        width: bW * 0.40, opacity: infOp, transform: [{ translateY: infY }],
       }}>
         <Text style={{
-          fontFamily: SANS, fontSize: fInf, color: GRAY,
+          fontFamily: SANS, fontSize: fInf, fontWeight: '600', color: GRAY,
           lineHeight: fInf * 1.4,
         }}>
           In Respiratory Tract Urinary Tract Infection and Typhoid Fever
         </Text>
       </Animated.View>
 
-      {/* MUKOCEF-O brand name */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.18,
-        opacity: brOp, transform: [{ translateX: brX }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: RED,
-        }}>
-          MUKOCEF-O
-        </Text>
-      </Animated.View>
-
-      {/* Composition */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.32,
-        width: bW * 0.45, opacity: cpOp, transform: [{ translateY: cpY }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fComp, fontWeight: '600', color: LT_GRAY, lineHeight: fComp * 1.5,
-        }}>
-          Cefpodoxime Proxetil 200 mg + Ofloxacin 200 mg Tablets
-        </Text>
-      </Animated.View>
-
-      {/* Chess piece image — centered, below composition */}
+      {/* Chess piece image — LEFT, below text */}
       <Animated.View style={{
         position: 'absolute',
-        left: bL + bW * 0.08,
-        top: bT + bH * 0.42,
+        left: bL + bW * 0.06,
+        top: bT + bH * 0.20,
         width: chessW, height: chessH,
         borderRadius: 12,
         overflow: 'hidden',
@@ -174,19 +150,70 @@ export const Page6: React.FC = () => {
         />
       </Animated.View>
 
-      {/* ═══════════════════ RIGHT SIDE — BADGES ═════════════════════ */}
+      {/* "Choose 'The Winning Combination'" — LEFT */}
+      <Animated.View style={{
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.78, width: bW * 0.42,
+        opacity: tagOp, transform: [{ translateY: tagY }],
+      }}>
+        <Text style={{
+          fontFamily: SANS, fontSize: fTag, fontWeight: '600', color: RED,
+        }}>
+          Choose 'The Winning Combination'
+        </Text>
+      </Animated.View>
 
+      {/* "SURE TO SUCCESS" — LEFT */}
+      <Animated.View style={{
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.86, width: bW * 0.42,
+        opacity: sureOp,
+      }}>
+        <Text style={{
+          fontFamily: SANS, fontSize: fSure, fontWeight: '700', fontStyle: 'italic', color: DARK,
+        }}>
+          "SURE TO SUCCESS"
+        </Text>
+      </Animated.View>
+
+      {/* ═══════════════════ RIGHT SIDE ════════════════════════════ */}
+
+      {/* MUKOCEF-O brand name — RIGHT */}
+      <Animated.View style={{
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.08,
+        opacity: brOp, transform: [{ translateX: brX }],
+      }}>
+        <Text style={{
+          fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: RED,
+        }}>
+          MUKOCEF-O
+        </Text>
+      </Animated.View>
+
+      {/* Composition — RIGHT */}
+      <Animated.View style={{
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.24,
+        width: bW * 0.42, opacity: cpOp, transform: [{ translateY: cpY }],
+      }}>
+        <Text style={{
+          fontFamily: SANS, fontSize: fComp, fontWeight: '600', color: LT_GRAY, lineHeight: fComp * 1.5,
+        }}>
+          Cefpodoxime Proxetil 200 mg + Ofloxacin 200 mg Tablets
+        </Text>
+      </Animated.View>
+
+      {/* Badges — RIGHT, stacked */}
       <Animated.View style={{
         position: 'absolute',
-        right: screenW - (bL + bW * 0.92),
-        top: bT + bH * 0.18,
+        left: bL + bW * 0.52,
+        top: bT + bH * 0.38,
         opacity: badgesOp, transform: [{ translateX: badgesX }],
       }}>
         {BADGES.map((badge, i) => (
           <View key={i} style={{
             backgroundColor: RED, borderRadius: 6,
-            paddingHorizontal: bW * 0.018, paddingVertical: bH * 0.012,
-            marginBottom: bH * 0.016, alignItems: 'center',
+            paddingHorizontal: bW * 0.020, paddingVertical: bH * 0.014,
+            marginBottom: bH * 0.018, alignItems: 'center',
           }}>
             <Text style={{
               fontFamily: SANS, fontSize: fBadge, fontWeight: '700', color: '#FFFFFF',
@@ -197,45 +224,17 @@ export const Page6: React.FC = () => {
         ))}
       </Animated.View>
 
-      {/* ═══════════════════ BOTTOM ════════════════════════════════ */}
-
-      {/* "Choose 'The Winning Combination'" */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06,
-        top: bT + bH * 0.80, width: bW * 0.85,
-        opacity: tagOp, transform: [{ translateY: tagY }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fTag, fontWeight: '700', color: RED,
-        }}>
-          Choose 'The Winning Combination'
-        </Text>
-      </Animated.View>
-
-      {/* "SURE TO SUCCESS" */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06,
-        top: bT + bH * 0.86, width: bW * 0.85,
-        opacity: sureOp,
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fSure, fontWeight: '700', fontStyle: 'italic', color: DARK,
-        }}>
-          "SURE TO SUCCESS"
-        </Text>
-      </Animated.View>
-
-      {/* Product codes — bottom left */}
+      {/* Product codes — RIGHT, bottom */}
       <View style={{
         position: 'absolute',
-        left: bL + bW * 0.06,
-        top: bT + bH * 0.92,
+        left: bL + bW * 0.52,
+        top: bT + bH * 0.88,
         flexDirection: 'row', gap: bW * 0.012,
       }}>
         {CODES.map((code, i) => (
           <Animated.View key={code} style={{
             backgroundColor: RED, borderRadius: 4,
-            paddingHorizontal: bW * 0.014, paddingVertical: bH * 0.008,
+            paddingHorizontal: bW * 0.016, paddingVertical: bH * 0.010,
             opacity: codeOps[i],
           }}>
             <Text style={{
