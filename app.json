@@ -3,7 +3,7 @@
     "name": "Templates",
     "slug": "gp-studio",
     "version": "1.0.1",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/logo-final.png",
     "scheme": "gpstudio",
     "userInterfaceStyle": "automatic",

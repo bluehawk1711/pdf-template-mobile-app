@@ -49,6 +49,10 @@ export interface TemplatePage {
   height: number;
   /** Optional HTML template asset ID (from require()) for WebView rendering. */
   htmlPath?: number;
+  /** Optional background image asset ID (from require()). */
+  backgroundImage?: number;
+  /** Optional main/foreground image asset ID (from require()). */
+  mainImage?: number;
 }
 
 export interface InvoiceTemplate {
