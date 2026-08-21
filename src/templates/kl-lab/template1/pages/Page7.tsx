@@ -216,7 +216,7 @@ export const Page7: React.FC = () => {
       {/* "One answer for many questions!" — LEFT BOTTOM, compact */}
       <Animated.View style={{
         position: 'absolute', left: bL + bW * 0.02,
-        top: bT + bH * 0.86, width: bW * 0.30,
+        top: bT + bH * 0.82, width: bW * 0.30,
         opacity: tagOp, transform: [{ translateY: tagY }],
       }}>
         <Text style={{
@@ -261,7 +261,7 @@ export const Page7: React.FC = () => {
       <Animated.View style={{
         position: 'absolute',
         left: bL + bW * 0.48,
-        top: bT + bH * 0.84, width: bW * 0.48,
+        top: bT + bH * 0.80, width: bW * 0.48,
         opacity: alsoOp,
       }}>
         <Text style={{

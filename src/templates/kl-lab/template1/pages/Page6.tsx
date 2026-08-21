@@ -179,21 +179,11 @@ export const Page6: React.FC = () => {
 
       {/* ═══════════════════ RIGHT SIDE ════════════════════════════ */}
 
-      {/* MUKOCEF-O brand name — RIGHT, dark orange */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.08,
-        opacity: brOp, transform: [{ translateX: brX }],
-      }}>
-        <Text style={{
-          fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: DARK_ORANGE,
-        }}>
-          MUKOCEF-O
-        </Text>
-      </Animated.View>
+
 
       {/* Composition — RIGHT */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.24,
+        position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.10,
         width: bW * 0.42, opacity: cpOp, transform: [{ translateY: cpY }],
       }}>
         <Text style={{
