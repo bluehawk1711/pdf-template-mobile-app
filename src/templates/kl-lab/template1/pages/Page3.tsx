@@ -23,6 +23,7 @@ import { useContentDimensions } from '../DimensionsContext';
 /* ── assets ───────────────────────────────────────────────────────── */
 
 const BG = require('../../../../../assets/template1/page3_background.png');
+const WOMAN = require('../../../../../assets/template1/page3_main.png');
 
 /* ── constants ────────────────────────────────────────────────────── */
 
@@ -78,6 +79,8 @@ export const Page3: React.FC = () => {
   /* ── animation values — explicit refs, no helper function ────────── */
   const titleOp = useRef(new Animated.Value(0)).current;
   const titleY = useRef(new Animated.Value(-15)).current;
+  const womanOp = useRef(new Animated.Value(0)).current;
+  const womanSc = useRef(new Animated.Value(0.7)).current;
   const brOp = useRef(new Animated.Value(0)).current;
   const brX = useRef(new Animated.Value(30)).current;
   const cpOp = useRef(new Animated.Value(0)).current;
@@ -96,8 +99,10 @@ export const Page3: React.FC = () => {
       Animated.parallel([
         Animated.timing(titleOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
         Animated.timing(titleY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
-        Animated.timing(brOp, { toValue: 1, duration: 500, delay: 200, useNativeDriver: true }),
-        Animated.timing(brX, { toValue: 0, duration: 500, delay: 200, useNativeDriver: true }),
+        Animated.timing(womanOp, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(womanSc, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(brOp, { toValue: 1, duration: 500, delay: 300, useNativeDriver: true }),
+        Animated.timing(brX, { toValue: 0, duration: 500, delay: 300, useNativeDriver: true }),
       ]),
       Animated.parallel([
         Animated.timing(cpOp, { toValue: 1, duration: 400, delay: 300, useNativeDriver: true }),
@@ -111,7 +116,7 @@ export const Page3: React.FC = () => {
         Animated.timing(indY, { toValue: 0, duration: 400, useNativeDriver: true }),
       ]),
     ]).start();
-  }, [titleOp, titleY, brOp, brX, cpOp, cpY, ingOps, indOp, indY]);
+  }, [titleOp, titleY, womanOp, womanSc, brOp, brX, cpOp, cpY, ingOps, indOp, indY]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
   const fTitle1 = bW * 0.026;
@@ -138,6 +143,26 @@ export const Page3: React.FC = () => {
       />
 
       {/* ═══════════════════ LEFT SIDE ═════════════════════════════ */}
+
+      {/* Pregnant woman image — LEFT CENTER */}
+      <Animated.View style={{
+        position: 'absolute',
+        left: bL + bW * 0.02,
+        top: bT + bH * 0.18,
+        width: bW * 0.34,
+        height: bH * 0.55,
+        borderRadius: 12,
+        overflow: 'hidden',
+        opacity: womanOp,
+        transform: [{ scale: womanSc }],
+      }}>
+        <Image
+          source={WOMAN}
+          style={{ width: '100%', height: '100%' }}
+          resizeMode="cover"
+          accessibilityIgnoresInvertColors
+        />
+      </Animated.View>
 
       {/* "In pregnancy & Lactation..." — LEFT TOP */}
       <Animated.View style={{
