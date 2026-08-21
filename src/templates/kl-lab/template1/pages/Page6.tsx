@@ -32,6 +32,7 @@ const BG_W = 1376;
 const BG_H = 768;
 
 const RED = '#D32F2F';
+const DARK_ORANGE = '#E65100';
 const DARK = '#1A1A1A';
 const GRAY = '#555555';
 const LT_GRAY = '#666666';
@@ -163,10 +164,10 @@ export const Page6: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* "SURE TO SUCCESS" — LEFT */}
+      {/* "SURE TO SUCCESS" — RIGHT */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06,
-        top: bT + bH * 0.86, width: bW * 0.42,
+        position: 'absolute', left: bL + bW * 0.48,
+        top: bT + bH * 0.86, width: bW * 0.48,
         opacity: sureOp,
       }}>
         <Text style={{
@@ -178,13 +179,13 @@ export const Page6: React.FC = () => {
 
       {/* ═══════════════════ RIGHT SIDE ════════════════════════════ */}
 
-      {/* MUKOCEF-O brand name — RIGHT */}
+      {/* MUKOCEF-O brand name — RIGHT, dark orange */}
       <Animated.View style={{
         position: 'absolute', left: bL + bW * 0.52, top: bT + bH * 0.08,
         opacity: brOp, transform: [{ translateX: brX }],
       }}>
         <Text style={{
-          fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: RED,
+          fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: DARK_ORANGE,
         }}>
           MUKOCEF-O
         </Text>
@@ -202,7 +203,7 @@ export const Page6: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* Badges — RIGHT, stacked */}
+      {/* Badges — RIGHT, stacked, dark orange */}
       <Animated.View style={{
         position: 'absolute',
         left: bL + bW * 0.52,
@@ -211,7 +212,7 @@ export const Page6: React.FC = () => {
       }}>
         {BADGES.map((badge, i) => (
           <View key={i} style={{
-            backgroundColor: RED, borderRadius: 6,
+            backgroundColor: DARK_ORANGE, borderRadius: 6,
             paddingHorizontal: bW * 0.020, paddingVertical: bH * 0.014,
             marginBottom: bH * 0.018, alignItems: 'center',
           }}>
@@ -228,7 +229,7 @@ export const Page6: React.FC = () => {
       <View style={{
         position: 'absolute',
         left: bL + bW * 0.52,
-        top: bT + bH * 0.88,
+        top: bT + bH * 0.92,
         flexDirection: 'row', gap: bW * 0.012,
       }}>
         {CODES.map((code, i) => (
