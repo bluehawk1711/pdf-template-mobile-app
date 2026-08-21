@@ -164,33 +164,33 @@ export const Page3: React.FC = () => {
         />
       </Animated.View>
 
-      {/* "In pregnancy & Lactation..." — LEFT TOP */}
+      {/* "In pregnancy & Lactation..." — LEFT, pushed down, bolder bigger */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.02, top: bT + bH * 0.04,
+        position: 'absolute', left: bL + bW * 0.02, top: bT + bH * 0.08,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
-          fontFamily: SANS, fontSize: fTitle1, fontWeight: '900', color: DARK,
+          fontFamily: SANS, fontSize: fTitle1 * 1.1, fontWeight: '900', color: DARK,
         }}>
           In pregnancy &
         </Text>
       </Animated.View>
 
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.10, top: bT + bH * 0.04 + fTitle1 * 1.2,
+        position: 'absolute', left: bL + bW * 0.10, top: bT + bH * 0.08 + fTitle1 * 1.3,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
-          fontFamily: SANS, fontSize: fTitle2, fontWeight: '900', color: DARK,
+          fontFamily: SANS, fontSize: fTitle2 * 1.1, fontWeight: '900', color: DARK,
         }}>
           Lactation...
         </Text>
       </Animated.View>
 
-      {/* "Good for Mom & Good for Child..." — LEFT BOTTOM */}
+      {/* "Good for Mom & Good for Child..." — RIGHT BOTTOM */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06,
-        top: bT + bH * 0.78,
+        position: 'absolute', left: bL + bW * 0.52,
+        top: bT + bH * 0.82,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{
@@ -201,8 +201,8 @@ export const Page3: React.FC = () => {
       </Animated.View>
 
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.06,
-        top: bT + bH * 0.78 + fTag1 * 1.3,
+        position: 'absolute', left: bL + bW * 0.52,
+        top: bT + bH * 0.82 + fTag1 * 1.3,
         opacity: titleOp, transform: [{ translateY: titleY }],
       }}>
         <Text style={{

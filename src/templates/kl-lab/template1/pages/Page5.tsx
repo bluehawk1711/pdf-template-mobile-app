@@ -157,17 +157,7 @@ export const Page5: React.FC = () => {
 
       {/* ═══════════════════ RIGHT HALF ════════════════════════════ */}
 
-      {/* MUKOCEF-200 mg — red bracket badge */}
-      <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.44, top: bT + bH * 0.06,
-        backgroundColor: RED, borderRadius: 6,
-        paddingHorizontal: bW * 0.022, paddingVertical: bH * 0.014,
-        opacity: brOp, transform: [{ translateX: brX }],
-      }}>
-        <Text style={{ fontFamily: SANS, fontSize: fBrand, fontWeight: '700', color: '#FFFFFF' }}>
-          MUKOCEF-200 mg
-        </Text>
-      </Animated.View>
+
 
       {/* Cefpodoxime Proxetil 200 mg Tablets */}
       <Animated.View style={{
