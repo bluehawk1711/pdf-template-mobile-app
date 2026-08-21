@@ -1,12 +1,11 @@
 /**
  * Page 6 — "MUKOCEF-O" combination product page.
  *
- * Centered layout: infection text + brand name + composition + chess image
- * Right side: feature badges (red pills)
- * Bottom: tagline + "SURE TO SUCCESS" + product codes
+ * Background already contains: red diagonal stripes, some decorative elements
+ * Overlay: infection text, brand name, composition, chess image, badges, taglines
  *
  * Assets:
- * - page6_background.png: light gradient background (16:9 landscape)
+ * - page6_background.png: red stripes + white center (16:9 landscape)
  * - page6_main.png: chess piece image
  */
 
@@ -96,20 +95,20 @@ export const Page6: React.FC = () => {
   }, [infOp, infY, brOp, brX, cpOp, cpY, chessOp, chessSc, badgesOp, badgesX, tagOp, tagY, sureOp, codeOps]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
-  const fInf = bW * 0.022;
-  const fBrand = bW * 0.048;
+  const fInf = bW * 0.020;
+  const fBrand = bW * 0.050;
   const fComp = bW * 0.016;
   const fBadge = bW * 0.014;
-  const fTag = bW * 0.032;
+  const fTag = bW * 0.034;
   const fSure = bW * 0.022;
   const fCode = bW * 0.014;
 
-  const chessW = bW * 0.30;
-  const chessH = bH * 0.40;
+  const chessW = bW * 0.26;
+  const chessH = bH * 0.45;
 
   return (
     <View style={styles.screen}>
-      {/* Background */}
+      {/* Background — red stripes + white center */}
       <Image
         source={BG}
         style={{ position: 'absolute', left: bL, top: bT, width: bW, height: bH }}
@@ -117,16 +116,16 @@ export const Page6: React.FC = () => {
         accessibilityIgnoresInvertColors
       />
 
-      {/* ═══════════════════ CENTER CONTENT ════════════════════════ */}
+      {/* ═══════════════════ TOP LEFT ═════════════════════════════ */}
 
       {/* Infection text */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03, top: bT + bH * 0.06,
-        width: bW * 0.50, opacity: infOp, transform: [{ translateY: infY }],
+        position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.06,
+        width: bW * 0.45, opacity: infOp, transform: [{ translateY: infY }],
       }}>
         <Text style={{
           fontFamily: SANS, fontSize: fInf, color: GRAY,
-          lineHeight: fInf * 1.5,
+          lineHeight: fInf * 1.4,
         }}>
           In Respiratory Tract Urinary Tract Infection and Typhoid Fever
         </Text>
@@ -134,7 +133,7 @@ export const Page6: React.FC = () => {
 
       {/* MUKOCEF-O brand name */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03, top: bT + bH * 0.22,
+        position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.18,
         opacity: brOp, transform: [{ translateX: brX }],
       }}>
         <Text style={{
@@ -146,21 +145,21 @@ export const Page6: React.FC = () => {
 
       {/* Composition */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03, top: bT + bH * 0.38,
-        width: bW * 0.50, opacity: cpOp, transform: [{ translateY: cpY }],
+        position: 'absolute', left: bL + bW * 0.06, top: bT + bH * 0.32,
+        width: bW * 0.45, opacity: cpOp, transform: [{ translateY: cpY }],
       }}>
         <Text style={{
-          fontFamily: SANS, fontSize: fComp, color: LT_GRAY, lineHeight: fComp * 1.6,
+          fontFamily: SANS, fontSize: fComp, fontWeight: '600', color: LT_GRAY, lineHeight: fComp * 1.5,
         }}>
           Cefpodoxime Proxetil 200 mg + Ofloxacin 200 mg Tablets
         </Text>
       </Animated.View>
 
-      {/* Chess piece image */}
+      {/* Chess piece image — centered, below composition */}
       <Animated.View style={{
         position: 'absolute',
-        left: bL + bW * 0.04,
-        top: bT + bH * 0.50,
+        left: bL + bW * 0.08,
+        top: bT + bH * 0.42,
         width: chessW, height: chessH,
         borderRadius: 12,
         overflow: 'hidden',
@@ -175,19 +174,19 @@ export const Page6: React.FC = () => {
         />
       </Animated.View>
 
-      {/* ═══════════════════ RIGHT SIDE BADGES ═════════════════════ */}
+      {/* ═══════════════════ RIGHT SIDE — BADGES ═════════════════════ */}
 
       <Animated.View style={{
         position: 'absolute',
-        right: screenW - (bL + bW * 0.96),
-        top: bT + bH * 0.20,
+        right: screenW - (bL + bW * 0.92),
+        top: bT + bH * 0.18,
         opacity: badgesOp, transform: [{ translateX: badgesX }],
       }}>
         {BADGES.map((badge, i) => (
           <View key={i} style={{
             backgroundColor: RED, borderRadius: 6,
-            paddingHorizontal: bW * 0.020, paddingVertical: bH * 0.012,
-            marginBottom: bH * 0.018, alignItems: 'center',
+            paddingHorizontal: bW * 0.018, paddingVertical: bH * 0.012,
+            marginBottom: bH * 0.016, alignItems: 'center',
           }}>
             <Text style={{
               fontFamily: SANS, fontSize: fBadge, fontWeight: '700', color: '#FFFFFF',
@@ -202,8 +201,8 @@ export const Page6: React.FC = () => {
 
       {/* "Choose 'The Winning Combination'" */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03,
-        top: bT + bH * 0.82, width: bW * 0.90, alignItems: 'center',
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.80, width: bW * 0.85,
         opacity: tagOp, transform: [{ translateY: tagY }],
       }}>
         <Text style={{
@@ -215,21 +214,21 @@ export const Page6: React.FC = () => {
 
       {/* "SURE TO SUCCESS" */}
       <Animated.View style={{
-        position: 'absolute', left: bL + bW * 0.03,
-        top: bT + bH * 0.88, width: bW * 0.90, alignItems: 'center',
+        position: 'absolute', left: bL + bW * 0.06,
+        top: bT + bH * 0.86, width: bW * 0.85,
         opacity: sureOp,
       }}>
         <Text style={{
-          fontFamily: SANS, fontSize: fSure, fontStyle: 'italic', color: DARK,
+          fontFamily: SANS, fontSize: fSure, fontWeight: '700', fontStyle: 'italic', color: DARK,
         }}>
           "SURE TO SUCCESS"
         </Text>
       </Animated.View>
 
-      {/* Product codes — bottom right */}
+      {/* Product codes — bottom left */}
       <View style={{
         position: 'absolute',
-        right: screenW - (bL + bW * 0.96),
+        left: bL + bW * 0.06,
         top: bT + bH * 0.92,
         flexDirection: 'row', gap: bW * 0.012,
       }}>
