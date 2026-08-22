@@ -1,11 +1,13 @@
 /**
  * Page 9 — Back cover: "Thank You Doctor"
  *
- * Background already contains: family photo, red swooshes, KL corner accents
- * Only overlay: centered text block (thank you, KL LAB, address)
+ * Background already contains: family photo, red swooshes, KL corner accents,
+ * "Thank You Doctor", "For Being my prescription to", "Happiness", smiley face
+ *
+ * Only overlay: KL LAB, divider line, Visit Us, address block
  *
  * Assets:
- * - page9_background.png: family photo + red swooshes + KL corners
+ * - page9_background.png: full design with text + smiley
  */
 
 import React, { useEffect, useRef } from "react";
@@ -30,8 +32,9 @@ const BG_W = 864;
 const BG_H = 1128;
 
 const DARK = "#1A1A1A";
-const RED = "#8B1A1A";
-const GRAY = "#444444";
+const LIGHT_BROWN = "#A0522D";
+const BROWN = "#8B4513";
+const GRAY = "#555555";
 const LT_GRAY = "#666666";
 
 const SANS = Platform.OS === "ios" ? "-apple-system" : "Roboto";
@@ -44,129 +47,37 @@ export const Page9: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values ────────────────────────────────────────────── */
-  const mk = (v = 0) => useRef(new Animated.Value(v)).current;
-
-  const thankOp = mk();
-  const thankY = mk(-20);
-  const forOp = mk();
-  const hapOp = mk();
-  const hapY = mk(10);
-  const smileOp = mk();
-  const smileSc = mk(0.5);
-  const labOp = mk();
-  const labY = mk(15);
-  const lineOp = mk();
-  const addrOp = mk();
-  const addrY = mk(15);
+  /* ── animation values (explicit refs) ──────────────────────────── */
+  const labOp = useRef(new Animated.Value(0)).current;
+  const labY = useRef(new Animated.Value(15)).current;
+  const lineOp = useRef(new Animated.Value(0)).current;
+  const addrOp = useRef(new Animated.Value(0)).current;
+  const addrY = useRef(new Animated.Value(15)).current;
 
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
-        Animated.timing(thankOp, {
-          toValue: 1,
-          duration: 600,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(thankY, {
-          toValue: 0,
-          duration: 600,
-          delay: 100,
-          useNativeDriver: true,
-        }),
+        Animated.timing(labOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(labY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(forOp, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(hapOp, {
-          toValue: 1,
-          duration: 500,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(hapY, {
-          toValue: 0,
-          duration: 500,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(smileOp, {
-          toValue: 1,
-          duration: 500,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(smileSc, {
-          toValue: 1,
-          duration: 500,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(labOp, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(labY, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(lineOp, {
-          toValue: 1,
-          duration: 400,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(addrOp, {
-          toValue: 1,
-          duration: 500,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(addrY, {
-          toValue: 0,
-          duration: 500,
-          delay: 200,
-          useNativeDriver: true,
-        }),
+        Animated.timing(lineOp, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.timing(addrOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(addrY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
       ]),
     ]).start();
-  }, [
-    thankOp,
-    thankY,
-    forOp,
-    hapOp,
-    hapY,
-    smileOp,
-    smileSc,
-    labOp,
-    labY,
-    lineOp,
-    addrOp,
-    addrY,
-  ]);
+  }, [labOp, labY, lineOp, addrOp, addrY]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
-  const fThank = bW * 0.085;
-  const fFor = bW * 0.032;
-  const fHap = bW * 0.048;
-  const fSmile = bW * 0.12;
-  const fLab = bW * 0.07;
-  const fVisit = bW * 0.028;
-  const fName = bW * 0.032;
-  const fDiv = bW * 0.024;
-  const fAddr = bW * 0.022;
+  const fLab = bW * 0.065;
+  const fVisit = bW * 0.026;
+  const fName = bW * 0.030;
+  const fDiv = bW * 0.022;
+  const fAddr = bW * 0.020;
 
   return (
     <View style={styles.screen}>
-      {/* Background — family photo + swooshes */}
+      {/* Background — full design with text + smiley */}
       <Image
         source={BG}
         style={{
@@ -180,148 +91,14 @@ export const Page9: React.FC = () => {
         accessibilityIgnoresInvertColors
       />
 
-      {/* ═══════════════════ CENTERED TEXT BLOCK ═══════════════════ */}
+      {/* ═══════════════════ OVERLAY: KL LAB + ADDRESS ═══════════════ */}
 
-      {/* "Thank You Doctor" */}
+      {/* "KL LAB" — centered, below the smiley in background */}
       <Animated.View
         style={{
           position: "absolute",
           left: bL,
-          top: bT + bH * 0.4,
-          width: bW,
-          alignItems: "center",
-          opacity: thankOp,
-          transform: [{ translateY: thankY }],
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: SANS,
-            fontSize: fThank,
-            fontWeight: "700",
-            color: DARK,
-          }}
-        >
-          Thank You Doctor
-        </Text>
-      </Animated.View>
-
-      {/* "For Being my prescription to" */}
-      <Animated.View
-        style={{
-          position: "absolute",
-          left: bL,
-          top: bT + bH * 0.5,
-          width: bW,
-          alignItems: "center",
-          opacity: forOp,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: SANS,
-            fontSize: fFor,
-            color: DARK,
-          }}
-        >
-          For Being my prescription to
-        </Text>
-      </Animated.View>
-
-      {/* "Happiness" */}
-      <Animated.View
-        style={{
-          position: "absolute",
-          left: bL,
-          top: bT + bH * 0.54,
-          width: bW,
-          alignItems: "center",
-          opacity: hapOp,
-          transform: [{ translateY: hapY }],
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: SANS,
-            fontSize: fHap,
-            fontWeight: "700",
-            color: DARK,
-          }}
-        >
-          Happiness
-        </Text>
-      </Animated.View>
-
-      {/* Smiley face — simple CSS */}
-      <Animated.View
-        style={{
-          position: "absolute",
-          left: bL,
-          top: bT + bH * 0.6,
-          width: bW,
-          alignItems: "center",
-          opacity: smileOp,
-          transform: [{ scale: smileSc }],
-        }}
-      >
-        <View
-          style={{
-            width: fSmile,
-            height: fSmile,
-            borderRadius: fSmile / 2,
-            borderWidth: 3,
-            borderColor: DARK,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {/* Eyes */}
-          <View
-            style={{
-              flexDirection: "row",
-              gap: fSmile * 0.25,
-              marginTop: fSmile * 0.22,
-            }}
-          >
-            <View
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: DARK,
-              }}
-            />
-            <View
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: DARK,
-              }}
-            />
-          </View>
-          {/* Mouth — curved line simulated */}
-          <View
-            style={{
-              width: fSmile * 0.4,
-              height: fSmile * 0.2,
-              borderBottomLeftRadius: fSmile * 0.2,
-              borderBottomRightRadius: fSmile * 0.2,
-              borderWidth: 2,
-              borderColor: DARK,
-              borderTopWidth: 0,
-              marginTop: fSmile * 0.06,
-            }}
-          />
-        </View>
-      </Animated.View>
-
-      {/* "KL LAB" */}
-      <Animated.View
-        style={{
-          position: "absolute",
-          left: bL,
-          top: bT + bH * 0.72,
+          top: bT + bH * 0.66,
           width: bW,
           alignItems: "center",
           opacity: labOp,
@@ -333,8 +110,8 @@ export const Page9: React.FC = () => {
             fontFamily: SANS,
             fontSize: fLab,
             fontWeight: "900",
-            color: RED,
-            letterSpacing: bW * 0.008,
+            color: LIGHT_BROWN,
+            letterSpacing: bW * 0.006,
           }}
         >
           KL LAB
@@ -345,11 +122,11 @@ export const Page9: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.2,
-          top: bT + bH * 0.79,
-          width: bW * 0.6,
+          left: bL + bW * 0.25,
+          top: bT + bH * 0.73,
+          width: bW * 0.5,
           height: 2,
-          backgroundColor: RED,
+          backgroundColor: LIGHT_BROWN,
           opacity: lineOp,
         }}
       />
@@ -359,7 +136,7 @@ export const Page9: React.FC = () => {
         style={{
           position: "absolute",
           left: bL,
-          top: bT + bH * 0.81,
+          top: bT + bH * 0.74,
           width: bW,
           alignItems: "center",
           opacity: addrOp,
@@ -370,8 +147,9 @@ export const Page9: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fVisit,
-            color: DARK,
-            marginBottom: bH * 0.006,
+            fontWeight: "700",
+            color: BROWN,
+            marginBottom: bH * 0.001,
           }}
         >
           Visit Us:
@@ -380,9 +158,9 @@ export const Page9: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fName,
-            fontWeight: "700",
-            color: DARK,
-            marginBottom: bH * 0.004,
+            fontWeight: "900",
+            color: BROWN,
+            marginBottom: bH * 0.001,
           }}
         >
           K.L. LAB
@@ -391,8 +169,9 @@ export const Page9: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fDiv,
-            color: GRAY,
-            marginBottom: bH * 0.004,
+            fontWeight: "700",
+            color: BROWN,
+            marginBottom: bH * 0.001,
           }}
         >
           (A Division of K.L. Pharma)
@@ -401,7 +180,8 @@ export const Page9: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fAddr,
-            color: LT_GRAY,
+            fontWeight: "600",
+            color: BROWN,
           }}
         >
           Saraswati Vihar Block-C, Khoda Colony, Ghaziabad U.P.-201001

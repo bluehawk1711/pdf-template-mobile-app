@@ -69,22 +69,20 @@ export const Page4: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values ────────────────────────────────────────────── */
-  const mk = (v = 0) => useRef(new Animated.Value(v)).current;
-
-  const titleOp = mk();
-  const titleY = mk(-20);
-  const womanOp = mk();
-  const womanSc = mk(0.7);
-  const rxOp = mk();
-  const brOp = mk();
-  const brX = mk(40);
-  const tmOp = mk();
-  const cpOp = mk();
-  const cpY = mk(15);
-  const boxOp = mk();
-  const toOp = mk();
-  const toY = mk(15);
+  /* ── animation values (explicit refs) ──────────────────────────── */
+  const titleOp = useRef(new Animated.Value(0)).current;
+  const titleY = useRef(new Animated.Value(-20)).current;
+  const womanOp = useRef(new Animated.Value(0)).current;
+  const womanSc = useRef(new Animated.Value(0.7)).current;
+  const rxOp = useRef(new Animated.Value(0)).current;
+  const brOp = useRef(new Animated.Value(0)).current;
+  const brX = useRef(new Animated.Value(40)).current;
+  const tmOp = useRef(new Animated.Value(0)).current;
+  const cpOp = useRef(new Animated.Value(0)).current;
+  const cpY = useRef(new Animated.Value(15)).current;
+  const boxOp = useRef(new Animated.Value(0)).current;
+  const toOp = useRef(new Animated.Value(0)).current;
+  const toY = useRef(new Animated.Value(15)).current;
 
   useEffect(() => {
     Animated.sequence([

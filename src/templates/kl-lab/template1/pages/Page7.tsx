@@ -87,18 +87,16 @@ export const Page7: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values ────────────────────────────────────────────── */
-  const mk = (v = 0) => useRef(new Animated.Value(v)).current;
-
-  const listOp = mk();
-  const listY = mk(10);
-  const prescOp = mk();
-  const imgOp = mk();
-  const imgSc = mk(0.7);
+  /* ── animation values (explicit refs) ──────────────────────────── */
+  const listOp = useRef(new Animated.Value(0)).current;
+  const listY = useRef(new Animated.Value(10)).current;
+  const prescOp = useRef(new Animated.Value(0)).current;
+  const imgOp = useRef(new Animated.Value(0)).current;
+  const imgSc = useRef(new Animated.Value(0.7)).current;
   const ingOps = useRef(INGREDIENTS.map(() => new Animated.Value(0))).current;
-  const tagOp = mk();
-  const tagY = mk(10);
-  const alsoOp = mk();
+  const tagOp = useRef(new Animated.Value(0)).current;
+  const tagY = useRef(new Animated.Value(10)).current;
+  const alsoOp = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.sequence([

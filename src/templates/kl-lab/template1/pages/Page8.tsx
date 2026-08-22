@@ -56,15 +56,13 @@ export const Page8: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values ────────────────────────────────────────────── */
-  const mk = (v = 0) => useRef(new Animated.Value(v)).current;
-
-  const acidOp = mk();
-  const acidX = mk(-25);
-  const imgOp = mk();
-  const imgSc = mk(0.7);
-  const aptOp = mk();
-  const aptY = mk(15);
+  /* ── animation values (explicit refs) ──────────────────────────── */
+  const acidOp = useRef(new Animated.Value(0)).current;
+  const acidX = useRef(new Animated.Value(-25)).current;
+  const imgOp = useRef(new Animated.Value(0)).current;
+  const imgSc = useRef(new Animated.Value(0.7)).current;
+  const aptOp = useRef(new Animated.Value(0)).current;
+  const aptY = useRef(new Animated.Value(15)).current;
 
   useEffect(() => {
     Animated.sequence([

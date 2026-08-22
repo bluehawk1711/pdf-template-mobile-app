@@ -1,10 +1,8 @@
 /**
  * Page 2 — "Qutocal" product page.
  *
- * Matches the actual composite image exactly:
- * - Pink swoosh background (already in background image)
- * - Left: title text + circular family photo + black tagline
- * - Right: Rx + Qutocal brand + composition + Indication badges (2x2) + ingredients
+ * Left: title text + circular family photo + black tagline
+ * Right: Rx + Qutocal brand + wider composition + Indication badges (2x2) + compact ingredients
  *
  * Assets:
  * - page2_background.png: pink swooshes
@@ -56,212 +54,86 @@ export const Page2: React.FC = () => {
   const layout = computeContainLayout(BG_W, BG_H, screenW, screenH);
   const { width: bW, height: bH, left: bL, top: bT } = layout;
 
-  /* ── animation values ────────────────────────────────────────────── */
-  const mk = (v = 0) => useRef(new Animated.Value(v)).current;
-
-  const l1Op = mk();
-  const l1Y = mk(-20);
-  const l2Op = mk();
-  const l2Y = mk(-15);
-  const l3Op = mk();
-  const l3Y = mk(-15);
-  const famOp = mk();
-  const famSc = mk(0.7);
-  const tagOp = mk();
-  const tagY = mk(20);
-  const rxOp = mk();
-  const brOp = mk();
-  const brX = mk(40);
-  const tmOp = mk();
-  const cpOp = mk();
-  const cpY = mk(15);
-  const indOp = mk();
+  /* ── animation values (explicit refs) ──────────────────────────── */
+  const l1Op = useRef(new Animated.Value(0)).current;
+  const l1Y = useRef(new Animated.Value(-20)).current;
+  const l2Op = useRef(new Animated.Value(0)).current;
+  const l2Y = useRef(new Animated.Value(-15)).current;
+  const l3Op = useRef(new Animated.Value(0)).current;
+  const l3Y = useRef(new Animated.Value(-15)).current;
+  const famOp = useRef(new Animated.Value(0)).current;
+  const famSc = useRef(new Animated.Value(0.7)).current;
+  const tagOp = useRef(new Animated.Value(0)).current;
+  const tagY = useRef(new Animated.Value(20)).current;
+  const rxOp = useRef(new Animated.Value(0)).current;
+  const brOp = useRef(new Animated.Value(0)).current;
+  const brX = useRef(new Animated.Value(40)).current;
+  const tmOp = useRef(new Animated.Value(0)).current;
+  const cpOp = useRef(new Animated.Value(0)).current;
+  const cpY = useRef(new Animated.Value(15)).current;
+  const indOp = useRef(new Animated.Value(0)).current;
   const bOps = useRef(BADGES.map(() => new Animated.Value(0))).current;
   const bScs = useRef(BADGES.map(() => new Animated.Value(0.6))).current;
-  const ingOp = mk();
-  const prOp = mk();
-  const prY = mk(15);
+  const ingOp = useRef(new Animated.Value(0)).current;
+  const prOp = useRef(new Animated.Value(0)).current;
+  const prY = useRef(new Animated.Value(15)).current;
 
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
-        Animated.timing(l1Op, {
-          toValue: 1,
-          duration: 600,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(l1Y, {
-          toValue: 0,
-          duration: 600,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(l2Op, {
-          toValue: 1,
-          duration: 600,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(l2Y, {
-          toValue: 0,
-          duration: 600,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(l3Op, {
-          toValue: 1,
-          duration: 600,
-          delay: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(l3Y, {
-          toValue: 0,
-          duration: 600,
-          delay: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rxOp, {
-          toValue: 1,
-          duration: 400,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(brOp, {
-          toValue: 1,
-          duration: 600,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(brX, {
-          toValue: 0,
-          duration: 600,
-          delay: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(tmOp, {
-          toValue: 1,
-          duration: 400,
-          delay: 250,
-          useNativeDriver: true,
-        }),
+        Animated.timing(l1Op, { toValue: 1, duration: 600, delay: 100, useNativeDriver: true }),
+        Animated.timing(l1Y, { toValue: 0, duration: 600, delay: 100, useNativeDriver: true }),
+        Animated.timing(l2Op, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(l2Y, { toValue: 0, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(l3Op, { toValue: 1, duration: 600, delay: 300, useNativeDriver: true }),
+        Animated.timing(l3Y, { toValue: 0, duration: 600, delay: 300, useNativeDriver: true }),
+        Animated.timing(rxOp, { toValue: 1, duration: 400, delay: 100, useNativeDriver: true }),
+        Animated.timing(brOp, { toValue: 1, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(brX, { toValue: 0, duration: 600, delay: 200, useNativeDriver: true }),
+        Animated.timing(tmOp, { toValue: 1, duration: 400, delay: 250, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(famOp, {
-          toValue: 1,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.timing(famSc, {
-          toValue: 1,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.timing(cpOp, {
-          toValue: 1,
-          duration: 500,
-          delay: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(cpY, {
-          toValue: 0,
-          duration: 500,
-          delay: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(indOp, {
-          toValue: 1,
-          duration: 400,
-          delay: 100,
-          useNativeDriver: true,
-        }),
+        Animated.timing(famOp, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(famSc, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(cpOp, { toValue: 1, duration: 500, delay: 50, useNativeDriver: true }),
+        Animated.timing(cpY, { toValue: 0, duration: 500, delay: 50, useNativeDriver: true }),
+        Animated.timing(indOp, { toValue: 1, duration: 400, delay: 100, useNativeDriver: true }),
         ...bOps.map((op, i) =>
           Animated.parallel([
-            Animated.timing(op, {
-              toValue: 1,
-              duration: 400,
-              delay: 150 + i * 80,
-              useNativeDriver: true,
-            }),
-            Animated.timing(bScs[i], {
-              toValue: 1,
-              duration: 400,
-              delay: 150 + i * 80,
-              useNativeDriver: true,
-            }),
+            Animated.timing(op, { toValue: 1, duration: 400, delay: 150 + i * 80, useNativeDriver: true }),
+            Animated.timing(bScs[i], { toValue: 1, duration: 400, delay: 150 + i * 80, useNativeDriver: true }),
           ]),
         ),
       ]),
       Animated.parallel([
-        Animated.timing(ingOp, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(prOp, {
-          toValue: 1,
-          duration: 500,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(prY, {
-          toValue: 0,
-          duration: 500,
-          delay: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(tagOp, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(tagY, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
+        Animated.timing(ingOp, { toValue: 1, duration: 500, useNativeDriver: true }),
+        Animated.timing(prOp, { toValue: 1, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(prY, { toValue: 0, duration: 500, delay: 100, useNativeDriver: true }),
+        Animated.timing(tagOp, { toValue: 1, duration: 500, useNativeDriver: true }),
+        Animated.timing(tagY, { toValue: 0, duration: 500, useNativeDriver: true }),
       ]),
     ]).start();
-  }, [
-    l1Op,
-    l1Y,
-    l2Op,
-    l2Y,
-    l3Op,
-    l3Y,
-    famOp,
-    famSc,
-    tagOp,
-    tagY,
-    rxOp,
-    brOp,
-    brX,
-    tmOp,
-    cpOp,
-    cpY,
-    indOp,
-    bOps,
-    bScs,
-    ingOp,
-    prOp,
-    prY,
-  ]);
+  }, [l1Op, l1Y, l2Op, l2Y, l3Op, l3Y, famOp, famSc, tagOp, tagY, rxOp, brOp, brX, tmOp, cpOp, cpY, indOp, bOps, bScs, ingOp, prOp, prY]);
 
   /* ── font sizes ──────────────────────────────────────────────────── */
   const fBrand = bW * 0.068;
-  const fLeftLg = bW * 0.034;
   const fLeftMd = bW * 0.026;
-  const fRx = bW * 0.02;
-  const fTm = bW * 0.016;
-  const fComp = bW * 0.012;
+  const fLeftLg = bW * 0.034;
+  const fRx = bW * 0.018;
+  const fTm = bW * 0.014;
+  const fComp = bW * 0.013;
   const fIndT = bW * 0.016;
-  const fBadge = bW * 0.012;
-  const fIngT = bW * 0.016;
-  const fIngX = bW * 0.012;
+  const fBadge = bW * 0.014;
+  const fIngT = bW * 0.014;
+  const fIngX = bW * 0.011;
   const fTag = bW * 0.028;
   const fPrice = bW * 0.018;
 
   const familySize = bW * 0.26;
+
+  /* Right half layout constants */
+  const RX = bW * 0.52;
+  const RW = bW * 0.46;
 
   return (
     <View style={styles.screen}>
@@ -342,7 +214,6 @@ export const Page2: React.FC = () => {
           transform: [{ translateY: l3Y }],
         }}
       >
-        {/* fLeftLg */}
         <Text
           style={{
             fontFamily: SANS,
@@ -357,7 +228,7 @@ export const Page2: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* Family photo — circular, shifted right */}
+      {/* Family photo — circular */}
       <Animated.View
         style={{
           position: "absolute",
@@ -411,7 +282,7 @@ export const Page2: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.52,
+          left: bL + RX,
           top: bT + bH * 0.02,
           opacity: rxOp,
         }}
@@ -432,7 +303,7 @@ export const Page2: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.52,
+          left: bL + RX,
           top: bT + bH * 0.04,
           opacity: brOp,
           transform: [{ translateX: brX }],
@@ -464,13 +335,13 @@ export const Page2: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* Composition */}
+      {/* Composition — WIDER, fills right half */}
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.52,
+          left: bL + RX,
           top: bT + bH * 0.18,
-          right: screenW - (bL + bW * 0.95),
+          width: RW,
           opacity: cpOp,
           transform: [{ translateY: cpY }],
         }}
@@ -479,14 +350,12 @@ export const Page2: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fComp,
+            fontWeight: "600",
             color: GRAY,
-            lineHeight: fComp * 1.9,
+            lineHeight: fComp * 1.5,
           }}
         >
-          Calcium Carbonate 1250 mg + Calcitriol 0.25 mcg +{"\n"}
-          Vitamin K2-7 45 mcg + Methylcobalamin 1500 mcg +{"\n"}
-          Magnesium 50 mg + L-Methylfolate 800 mcg + Zinc 7.5 mg{"\n"}
-          Softgel Capsules
+          Calcium Carbonate 1250 mg + Calcitriol 0.25 mcg + Vitamin K2-7 45 mcg + Methylcobalamin 1500 mcg + Magnesium 50 mg + L-Methylfolate 800 mcg + Zinc 7.5 mg Softgel Capsules
         </Text>
       </Animated.View>
 
@@ -494,8 +363,8 @@ export const Page2: React.FC = () => {
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.52,
-          top: bT + bH * 0.36,
+          left: bL + RX,
+          top: bT + bH * 0.34,
           opacity: indOp,
         }}
       >
@@ -503,7 +372,7 @@ export const Page2: React.FC = () => {
           style={{
             fontFamily: SANS,
             fontSize: fIndT,
-            fontWeight: "700",
+            fontWeight: "800",
             color: PINK,
           }}
         >
@@ -511,16 +380,16 @@ export const Page2: React.FC = () => {
         </Text>
       </Animated.View>
 
-      {/* Badges — 2x2 grid */}
+      {/* Badges — 2x2 grid, compact */}
       <View
         style={{
           position: "absolute",
-          left: bL + bW * 0.52,
-          top: bT + bH * 0.41,
-          width: bW * 0.42,
+          left: bL + RX,
+          top: bT + bH * 0.39,
+          width: RW,
           flexDirection: "row",
           flexWrap: "wrap",
-          gap: bH * 0.012,
+          gap: bH * 0.010,
         }}
       >
         {BADGES.map((badge, i) => (
@@ -528,9 +397,9 @@ export const Page2: React.FC = () => {
             key={badge}
             style={{
               backgroundColor: PINK,
-              borderRadius: 8,
-              paddingHorizontal: bW * 0.018,
-              paddingVertical: bH * 0.012,
+              borderRadius: 6,
+              paddingHorizontal: bW * 0.010,
+              paddingVertical: bH * 0.008,
               width: "47%",
               opacity: bOps[i],
               transform: [{ scale: bScs[i] }],
@@ -542,7 +411,6 @@ export const Page2: React.FC = () => {
                 fontSize: fBadge,
                 fontWeight: "700",
                 color: "#FFF",
-                textAlign: "center",
               }}
             >
               {badge}
@@ -551,15 +419,15 @@ export const Page2: React.FC = () => {
         ))}
       </View>
 
-      {/* Ingredients — two columns, compact grid */}
+      {/* Ingredients — two columns, COMPACT, no overlap */}
       <Animated.View
         style={{
           position: "absolute",
-          left: bL + bW * 0.52,
-          top: bT + bH * 0.54,
-          right: screenW - (bL + bW * 0.96),
+          left: bL + RX,
+          top: bT + bH * 0.56,
+          width: RW,
           flexDirection: "row",
-          gap: bW * 0.015,
+          gap: bW * 0.012,
           opacity: ingOp,
         }}
       >
@@ -569,9 +437,9 @@ export const Page2: React.FC = () => {
             style={{
               fontFamily: SANS,
               fontSize: fIngT,
-              fontWeight: "700",
+              fontWeight: "800",
               color: PINK,
-              marginBottom: bH * 0.006,
+              marginBottom: bH * 0.004,
             }}
           >
             Vitamin K2-7:
@@ -582,12 +450,11 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
-              marginBottom: bH * 0.008,
+              lineHeight: fIngX * 1.3,
+              marginBottom: bH * 0.006,
             }}
           >
-            Vitamin K2-7 is the active isomer of vitamin K2 and has the highest
-            bioavailability and longest
+            Vitamin K2-7 is the active isomer of vitamin K2 and has the highest bioavailability and longest
           </Text>
           <Text
             style={{
@@ -595,8 +462,8 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
-              marginBottom: bH * 0.008,
+              lineHeight: fIngX * 1.3,
+              marginBottom: bH * 0.006,
             }}
           >
             K2-7 Increases collagen production through osteoblastic cell
@@ -607,21 +474,19 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
-              marginBottom: bH * 0.01,
+              lineHeight: fIngX * 1.3,
+              marginBottom: bH * 0.008,
             }}
           >
-            Activates the Matrix GLA Protein (MGP) Which prevent calcium
-            deposits in the arteries and helps build calcium into healthy bone
-            matrix via carboxylated osteocalcin.
+            Activates the Matrix GLA Protein (MGP) Which prevent calcium deposits in the arteries and helps build calcium into healthy bone matrix via carboxylated osteocalcin.
           </Text>
           <Text
             style={{
               fontFamily: SANS,
               fontSize: fIngT,
-              fontWeight: "700",
+              fontWeight: "800",
               color: PINK,
-              marginBottom: bH * 0.006,
+              marginBottom: bH * 0.004,
             }}
           >
             Methylcobalamin:
@@ -632,11 +497,10 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
+              lineHeight: fIngX * 1.3,
             }}
           >
-            Combined treatment of folate and vitamin B12 is safe calcification
-            by 50% and cardiovascular death risk by 46%
+            Combined treatment of folate and vitamin B12 is safe calcification by 50% and cardiovascular death risk by 46%
           </Text>
         </View>
         {/* Col 2 */}
@@ -645,9 +509,9 @@ export const Page2: React.FC = () => {
             style={{
               fontFamily: SANS,
               fontSize: fIngT,
-              fontWeight: "700",
+              fontWeight: "800",
               color: PINK,
-              marginBottom: bH * 0.006,
+              marginBottom: bH * 0.004,
             }}
           >
             Calcium Carbonate:
@@ -658,21 +522,19 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
-              marginBottom: bH * 0.01,
+              lineHeight: fIngX * 1.3,
+              marginBottom: bH * 0.008,
             }}
           >
-            Plays a critical role in the body{"\n"}It is essential for normal
-            functioning of nerves, cell, muscle and bones.{"\n\n"}Most important
-            nutrient in reducing risk of osteoporosis
+            Plays a critical role in the body. It is essential for normal functioning of nerves, cell, muscle and bones. Most important nutrient in reducing risk of osteoporosis
           </Text>
           <Text
             style={{
               fontFamily: SANS,
               fontSize: fIngT,
-              fontWeight: "700",
+              fontWeight: "800",
               color: PINK,
-              marginBottom: bH * 0.006,
+              marginBottom: bH * 0.004,
             }}
           >
             Calcitriol (Active form of vitamin D3):
@@ -683,8 +545,8 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
-              marginBottom: bH * 0.01,
+              lineHeight: fIngX * 1.3,
+              marginBottom: bH * 0.008,
             }}
           >
             Reduces risk of vertebral and hip fractures in postmenopausal women
@@ -693,9 +555,9 @@ export const Page2: React.FC = () => {
             style={{
               fontFamily: SANS,
               fontSize: fIngT,
-              fontWeight: "700",
+              fontWeight: "800",
               color: PINK,
-              marginBottom: bH * 0.006,
+              marginBottom: bH * 0.004,
             }}
           >
             L-Methyl Folate
@@ -706,7 +568,7 @@ export const Page2: React.FC = () => {
               fontSize: fIngX,
               fontWeight: "600",
               color: LT_GRAY,
-              lineHeight: fIngX * 1.4,
+              lineHeight: fIngX * 1.3,
             }}
           >
             Protect against natural defects
